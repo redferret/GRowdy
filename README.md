@@ -9,27 +9,27 @@ Rowdy
 <TERMINAL>
 
 ID 			=> id;
-CONST 		=> constant;
+CONST 			=> constant;
 IF 			=> "if";
-BECOMES 	=> "=";
+BECOMES 		=> "=";
 AND			=> "and";
 OR			=> "or";
-LESS		=> "<";
-GREATER		=> ">";
+LESS			=> "<";
+GREATER			=> ">";
 
 <SPECIAL> => "< > |";
 
 <BEGIN>
 
 EXPRESSION 			=> 	BOOL_TERM(ID CONST AND) 
-						BOOL_TERM_TAIL(OR);
+					BOOL_TERM_TAIL(OR);
 						
 BOOL_TERM			=> 	BOOL_FACTOR(ID CONST) 
-						BOOL_FACTOR_TAIL(AND);
+					BOOL_FACTOR_TAIL(AND);
 						
-BOOL_TERM_TAIL		=> OR;
+BOOL_TERM_TAIL			=> OR;
 BOOL_FACTOR			=> TERM(ID CONST) TERM_TAIL;
-BOOL_FACTOR_TAIL	=> AND;
+BOOL_FACTOR_TAIL		=> AND;
 TERM				=> FACTOR(ID CONST) FACTOR_TAIL;
 TERM_TAIL			=>
 FACTOR				=> ATOMIC(ID CONST);
