@@ -1,13 +1,13 @@
 
 package growdy.testUtils;
 
-import rowdy.RowdyBuilder;
-import rowdy.RowdyLexer;
-import rowdy.Terminal;
-import rowdy.Language;
-import rowdy.Node;
-import rowdy.exceptions.ParseException;
-import rowdy.exceptions.SyntaxException;
+import growdy.RowdyBuilder;
+import growdy.RowdyLexer;
+import growdy.Terminal;
+import growdy.Language;
+import growdy.Node;
+import growdy.exceptions.ParseException;
+import growdy.exceptions.SyntaxException;
 import java.io.IOException;
 import static org.junit.Assert.*;
 import static growdy.GRowdy.*;

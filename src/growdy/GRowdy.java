@@ -4,14 +4,8 @@ package growdy;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rowdy.Language;
-import rowdy.Node;
-import rowdy.NonTerminal;
-import rowdy.ProductionRule;
-import rowdy.RowdyBuilder;
-import rowdy.RowdyLexer;
-import rowdy.exceptions.ParseException;
-import rowdy.exceptions.SyntaxException;
+import growdy.exceptions.ParseException;
+import growdy.exceptions.SyntaxException;
 
 /**
  *
