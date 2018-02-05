@@ -1,7 +1,6 @@
 
 package growdy;
 
-import rowdy.Node;
 import org.junit.Test;
 import static growdy.GRowdy.*;
 import static growdy.testUtils.TestUtils.*;
