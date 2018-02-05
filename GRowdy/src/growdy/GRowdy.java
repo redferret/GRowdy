@@ -41,11 +41,62 @@ public class GRowdy {
           PRule_TERMINAL_PARAMS = 12;
   
   public static final NonTerminal[] nonterminals = {
-    
+    new NonTerminal("prog", GR, 
+            new int[][]{}),
+    new NonTerminal("grammar", GRAMMAR, 
+            new int[][]{}),
+    new NonTerminal("term-body", TERMINAL_BODY, 
+            new int[][]{}),
+    new NonTerminal("special", SPECIAL_DEF, 
+            new int[][]{}),
+    new NonTerminal("term-defs", TERMINAL_DEFS, 
+            new int[][]{}),
+    new NonTerminal("term-def", TERMINAL_DEF, 
+            new int[][]{}),
+    new NonTerminal("atomic", ATOMIC, 
+            new int[][]{}),
+    new NonTerminal("grammar-body", GRAMMAR_BODY, 
+            new int[][]{}),
+    new NonTerminal("nonterm-defs", NONTERMINAL_DEFS, 
+            new int[][]{}),
+    new NonTerminal("or-opt", OR_OPT, 
+            new int[][]{}),
+    new NonTerminal("nonterm-def", NONTERMINAL_DEF, 
+            new int[][]{}),
+    new NonTerminal("nonterm-params", NONTERMINAL_PARAMS, 
+            new int[][]{}),
+    new NonTerminal("term-params", TERMINAL_PARAMS, 
+            new int[][]{}),
   };
   
   
   public static final ProductionRule[] grammarRules = {
+    new ProductionRule(PRule_GR, 
+            new int[]{}),
+    new ProductionRule(PRule_GRAMMAR, 
+            new int[]{}),
+    new ProductionRule(PRule_TERMINAL_BODY, 
+            new int[]{}),
+    new ProductionRule(PRule_SPECIAL_DEF, 
+            new int[]{}),
+    new ProductionRule(PRule_TERMINAL_DEFS, 
+            new int[]{}),
+    new ProductionRule(PRule_TERMINAL_DEF, 
+            new int[]{}),
+    new ProductionRule(PRule_ATOMIC, 
+            new int[]{}),
+    new ProductionRule(PRule_GRAMMAR_BODY, 
+            new int[]{}),
+    new ProductionRule(PRule_NONTERMINAL_DEFS, 
+            new int[]{}),
+    new ProductionRule(PRule_OR_OPT, 
+            new int[]{}),
+    new ProductionRule(PRule_NONTERMINAL_DEF, 
+            new int[]{}),
+    new ProductionRule(PRule_NONTERMINAL_PARAMS, 
+            new int[]{}),
+    new ProductionRule(PRule_TERMINAL_PARAMS, 
+            new int[]{}),
   };
   
   private static final Language growdyLang = Language.build(grammarRules, terms, nonterminals);
