@@ -1,0 +1,15 @@
+
+Rowdy
+
+<TERMINAL>
+
+ID 			=> id;
+
+<SPECIAL> => "< > |";
+
+<BEGIN>
+
+EXPRESSION 				=> 	BOOL_TERM 
+							BOOL_TERM_TAIL;
+						
+BOOL_TERM(ID CONST AND)	=> 	BOOL_FACTOR | BOOL_TERM BOOL_FACTOR_TAIL;
