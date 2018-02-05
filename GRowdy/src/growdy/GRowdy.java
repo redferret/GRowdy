@@ -14,12 +14,12 @@ import rowdy.RowdyLexer;
 public class GRowdy {
 
   public static final String specialSym = "< > | => ( )";
-  public static final String[] terms = 
-      {"ID", "CONST", "<", ">", "(", ")", "|", "BEGIN", "TERMINAL", "=>"};
+  public static final String[] terms = {"ID", "CONST", "<", ">", "(", ")", "|", 
+    "BEGIN", "TERMINAL", "SPECIAL", "=>"};
   
   public static final int ID = 0, CONST = 1, LEFTCARET = 2, RIGHTCARET = 3,
-          LEFTPAREN = 4, RIGHTPAREN = 5, OR = 6, BEGIN = 7, TERMINAL = 8,
-          IS = 9;
+          LEFTPAREN = 4, RIGHTPAREN = 5, OR = 6, BEGIN = 7, TERMINAL = 8, 
+          SPECIAL = 9, IS = 10;
   
   
   public static final NonTerminal[] nonterminals = {
