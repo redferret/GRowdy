@@ -87,7 +87,7 @@ public class GRowdy {
     new ProductionRule(PRule_SPECIAL_DEF, 
             new int[]{LEFTCARET, SPECIAL, RIGHTCARET, IS, CONST, SEMICOLON}),
     new ProductionRule(PRule_TERMINAL_DEFS, 
-            new int[]{TERMINAL_DEF, SEMICOLON, TERMINAL_DEFS,}),
+            new int[]{TERMINAL_DEF, SEMICOLON, TERMINAL_DEFS}),
     new ProductionRule(PRule_TERMINAL_DEF, 
             new int[]{ID, IS, ATOMIC}),
     
