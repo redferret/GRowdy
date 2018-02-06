@@ -39,11 +39,11 @@ public class Node {
     return def;
   }
 
-  public boolean hasChildren() {
+  public boolean hasSymbols() {
     return !children.isEmpty();
   }
 
-  public Node getLeftMostChild() {
+  public Node getLeftMost() {
     if (children.isEmpty()) {
       return null;
     }

@@ -2,8 +2,8 @@
 package growdy;
 
 import org.junit.Test;
-import static growdy.GRowdy.*;
 import static growdy.testUtils.TestUtils.*;
+import static growdy.GRConstants.*;
 
 /**
  *
@@ -43,7 +43,7 @@ public class GRowdyTest {
     testContainsSymbols(nontermDefs, new int[]{NONTERMINAL_DEF, SEMICOLON, NONTERMINAL_DEFS});
     
     Node nontermDef = getFromAndTestNotNull(nontermDefs, NONTERMINAL_DEF);
-    testContainsSymbols(nontermDef, new int[]{ID, NONTERMINAL_PARAMS, IS, ID_LIST, OR_OPT});
+    testContainsSymbols(nontermDef, new int[]{ID, NONTERMINAL_PARAMS, IS, ID, ID_LIST, OR_OPTION});
     
     Node params = getFromAndTestNotNull(nontermDef, NONTERMINAL_PARAMS);
     testContainsSymbols(params, new int[]{LEFTPAREN, TERMINAL_PARAMS, RIGHTPAREN});

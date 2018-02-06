@@ -1,5 +1,6 @@
 package growdy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * give context to the children nodes.
  * @author Richard DeSilvey
  */
-public class NonTerminal extends Symbol {
+public class NonTerminal extends Symbol implements Serializable{
 
   private List<Hint> hints;
 

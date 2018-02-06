@@ -5,8 +5,8 @@ import java.util.List;
 import growdy.exceptions.SyntaxException;
 
 /**
- * The builder takes a RowdyLexer instance and pulls tokens to build a parse
- * tree with recursive decent parsing. If no build exceptions occur the 
+ * The builder takes a RowdyLexer instance and pulls tokens to build a parseSource
+ tree with recursive decent parsing. If no build exceptions occur the 
  * program can be retrieved.
  * @author Richard DeSilvey
  */

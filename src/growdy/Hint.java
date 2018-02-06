@@ -1,5 +1,7 @@
 package growdy;
 
+import java.io.Serializable;
+
 /**
  * A hint holds a terminal and a hint value to aid the parser when the program
  * tree is being built. The hint is a production rule based on the current token
@@ -7,7 +9,7 @@ package growdy;
  *
  * @author Richard DeSilvey
  */
-public class Hint {
+public class Hint  implements Serializable{
 
   private final int terminalId;
   private final int hint;
