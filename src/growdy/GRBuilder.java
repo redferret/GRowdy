@@ -123,13 +123,7 @@ class GRBuilder implements Serializable {
       
       Node idList = nonTermDef.get(ID_LIST);
       while(idList.hasSymbols()) {
-        Node termListItem = idList.get(ID);
-        name = ((Terminal) termListItem.symbol()).getName();
-        id = termNames.indexOf(name);
-        if (id < 0) {
-          id = nonterminals.indexOf(name);
-        }
-        productionSymbols.add(id);
+        addSymbolId(idList, productionSymbols);
         idList = idList.get(ID_LIST);
       }
       
@@ -139,23 +133,11 @@ class GRBuilder implements Serializable {
       
       Node orOpt = nonTermDef.get(OR_OPTION);
       while (orOpt.hasSymbols()) {
-        Node orOptId = orOpt.get(ID);
-        name = ((Terminal)orOptId.symbol()).getName();
-        id = termNames.indexOf(name);
-        if (id < 0) {
-          id = nonterminals.indexOf(name);
-        }
-        productionSymbols.add(id);
+        addSymbolId(orOpt, productionSymbols);
         
         idList = orOpt.get(ID_LIST);
         while(idList.hasSymbols()) {
-          Node termListItem = idList.get(ID);
-          name = ((Terminal) termListItem.symbol()).getName();
-          id = termNames.indexOf(name);
-          if (id < 0) {
-            id = nonterminals.indexOf(name);
-          }
-          productionSymbols.add(id);
+          addSymbolId(idList, productionSymbols);
           idList = idList.get(ID_LIST);
         }
         
@@ -168,6 +150,18 @@ class GRBuilder implements Serializable {
 
       nonTermDefs = nonTermDefs.get(NONTERMINAL_DEFS);
     }
+  }
+
+  private void addSymbolId(Node idList, List<Integer> productionSymbols) {
+    String name;
+    int id;
+    Node termListItem = idList.get(ID);
+    name = ((Terminal) termListItem.symbol()).getName();
+    id = termNames.indexOf(name);
+    if (id < 0) {
+      id = nonterminals.indexOf(name);
+    }
+    productionSymbols.add(id);
   }
   
   private void createNewProductionRule(int pruleId, List<Integer> productionSymbols) {
