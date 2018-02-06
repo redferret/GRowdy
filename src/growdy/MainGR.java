@@ -39,6 +39,9 @@ public class MainGR {
     String sourcePackage = "";
     if (args.length > 1) {
       sourcePackage = args[1];
+      if (sourcePackage.contains("\\")){
+        throw new IllegalArgumentException("Invalid Java Package");
+      }
     }
     if (args.length > 2) {
       resourcePath = args[2];
