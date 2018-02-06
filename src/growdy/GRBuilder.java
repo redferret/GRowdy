@@ -176,8 +176,7 @@ class GRBuilder implements Serializable {
   }
   
   public String getGrammarName() {
-    Node grammarId = builder.getProgram().get(ID);
-    return ((Terminal)grammarId.symbol()).getName();
+    return grammarName;
   }
   
   public ProductionRule[] getGrammarRules() {
