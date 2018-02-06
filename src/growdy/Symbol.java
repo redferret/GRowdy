@@ -1,11 +1,13 @@
 package growdy;
 
+import java.io.Serializable;
+
 /**
  * A symbol is a terminal or non-terminal defined by a language definition.
  *
  * @author Richard DeSilvey
  */
-public abstract class Symbol {
+public abstract class Symbol implements Serializable {
 
   protected String symbol;
   protected int id;

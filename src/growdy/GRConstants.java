@@ -16,7 +16,7 @@ public class GRConstants {
   
   public static final int GR = 100, GRAMMAR = 101, TERMINAL_BODY = 102,
           SPECIAL_DEF = 103, TERMINAL_DEFS = 104, TERMINAL_DEF = 105, 
-          ATOMIC = 106, GRAMMAR_BODY = 107,NONTERMINAL_DEFS = 108,OR_OPT = 109,
+          ATOMIC = 106, GRAMMAR_BODY = 107,NONTERMINAL_DEFS = 108,OR_OPTION = 109,
           NONTERMINAL_DEF = 110,NONTERMINAL_PARAMS = 111,TERMINAL_PARAMS = 112,
           ID_LIST = 113;
           
@@ -49,7 +49,7 @@ public class GRConstants {
             new int[][]{{LEFTCARET, PRule_GRAMMAR_BODY}}),
     new NonTerminal("nonterm-defs", NONTERMINAL_DEFS, 
             new int[][]{{ID, PRule_NONTERMINAL_DEFS}}),
-    new NonTerminal("or-opt", OR_OPT, 
+    new NonTerminal("or-opt", OR_OPTION, 
             new int[][]{{OR, PRule_OR_OPT}}),
     new NonTerminal("id-list", ID_LIST, 
             new int[][]{{ID, PRule_ID_LIST}}),
@@ -91,9 +91,9 @@ public class GRConstants {
     new ProductionRule(PRule_NONTERMINAL_DEFS, 
             new int[]{NONTERMINAL_DEF, SEMICOLON, NONTERMINAL_DEFS}),
     new ProductionRule(PRule_OR_OPT, 
-            new int[]{OR, ID_LIST, OR_OPT}),
+            new int[]{OR, ID, ID_LIST, OR_OPTION}),
     new ProductionRule(PRule_NONTERMINAL_DEF, 
-            new int[]{ID, NONTERMINAL_PARAMS, IS, ID_LIST, OR_OPT}),
+            new int[]{ID, NONTERMINAL_PARAMS, IS, ID, ID_LIST, OR_OPTION}),
     new ProductionRule(PRule_ID_LIST, 
             new int[]{ID, ID_LIST}),
     

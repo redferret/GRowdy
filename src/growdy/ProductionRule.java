@@ -1,6 +1,7 @@
 
 package growdy;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Arrays;
  * build a parse tree.
  * @author Richard DeSilvey
  */
-public class ProductionRule {
+public class ProductionRule implements Serializable {
   private final int id;
   private final int[] simpleProduction;
 
