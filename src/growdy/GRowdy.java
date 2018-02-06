@@ -19,12 +19,10 @@ public class GRowdy {
   private final RowdyLexer parser;
   private final RowdyBuilder builder;
   private GRBuilder grObject;
-  private final int firstPRuleId;
   
   private GRowdy(String grammarFileName) {
     // Get the grammar as a resource (Deserialize) and use it to fill in
     // everything needed for a Language and a Lexer
-    firstPRuleId = grObject.getRootTerminalId();
     ProductionRule[] grammarRules = grObject.getGrammarRules();
     NonTerminal[] nonterminals = grObject.getNonterminals();
     String[] terms = grObject.getTerms();
@@ -69,7 +67,7 @@ public class GRowdy {
    */
   public void buildFromSource(String sourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
     parser.parseSource(sourceFile);
-    builder.buildAs(parser, firstPRuleId);
+    builder.buildAs(parser, grObject.getRootTerminalId());
   }
   
   /**
