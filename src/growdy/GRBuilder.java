@@ -23,12 +23,14 @@ class GRBuilder implements Serializable {
   private final List<NonTerminal> nonterminals;
   private final List<String> termSymbols;
   private final List<String> termNames;
+  private final List<String> nontermNames;
   private String specialSym;
   private String grammarName;
-  private int rootNodeId;
+  private final int rootNodeId = 1000;
   private final int identId = 0;
   private final int constId = 1;
   
+  private transient String javaSource;
   private transient final Language grLang = Language.build(GRConstants.grammarRules, GRConstants.terms, GRConstants.nonterminals);
   private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym, 0, 1);
   private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang);
@@ -39,10 +41,31 @@ class GRBuilder implements Serializable {
     
     productionRules = new ArrayList<>();
     nonterminals = new ArrayList<>();
+    nontermNames = new ArrayList<>();
     termSymbols = new ArrayList<>();
     termNames = new ArrayList<>();
     
     build();
+    generateJavaSource();
+  }
+  
+  private void generateJavaSource() {
+    StringBuilder source = new StringBuilder();
+    source.append("public class ").append(grammarName);
+    source.append("GrammarConstants {\n");
+    source.append("\tpublic static final int \n\t\t");
+    int id = 0;
+    for (String termName : termNames) {
+      source.append(termName.toUpperCase()).append(" = ").append(id++).append(",\n\t\t");
+    }
+    for (int i = 0; i < nontermNames.size()-1; i++) {
+      String nontermName = nontermNames.get(i);
+      source.append(nontermName.toUpperCase()).append(" = ").append((1000 + i)).append(",\n\t\t");
+    }
+    int l = nontermNames.size()-1;
+    source.append(nontermNames.get(l)).append(" = ").append((1000 + l)).append(";\n");
+    source.append("}");
+    javaSource = source.toString();
   }
   
   private void build() {
@@ -52,7 +75,6 @@ class GRBuilder implements Serializable {
     specialSym = ((Terminal)specialSyms.get(CONST).symbol()).getName();
     Node grammarId = builder.getProgram().get(ID);
     grammarName = ((Terminal)grammarId.symbol()).getName();
-    rootNodeId = builder.getProgram().symbol().id();
     
     collectTerminalDefs(termBody.get(TERMINAL_DEFS));
     collectNonTerminals(nonTermBody.get(NONTERMINAL_DEFS));
@@ -89,6 +111,7 @@ class GRBuilder implements Serializable {
       Node nonTermDef = nonTermDefs.get(NONTERMINAL_DEF);
       Node nonTermId = nonTermDef.get(ID);
       String nonTerminalName = ((Terminal)nonTermId.symbol()).getName();
+      nontermNames.add(nonTerminalName);
       String nonTerminalRep = nonTerminalName.toLowerCase().replaceAll("_", "-");
       List<int[]> hints = new ArrayList<>();
       
@@ -109,14 +132,17 @@ class GRBuilder implements Serializable {
   }
   
   private void buildProductionRules(Node nonTermDefs) {
-    int pruleStart = 0;
+    int pruleStart = 1000;
     while (nonTermDefs.hasSymbols()) {
       Node nonTermDef = nonTermDefs.get(NONTERMINAL_DEF);
       Node terminal = nonTermDef.get(ID, 1);
       String name = ((Terminal)terminal.symbol()).getName();
       int id = termNames.indexOf(name);
       if (id < 0) {
-        id = nonterminals.indexOf(name);
+        id = nontermNames.indexOf(name)+1000;
+        if (id < 0) {
+          throw new RuntimeException("Unknown symbol " + name);
+        }
       }
       List<Integer> productionSymbols = new ArrayList<>();
       productionSymbols.add(id);
@@ -159,7 +185,10 @@ class GRBuilder implements Serializable {
     name = ((Terminal) termListItem.symbol()).getName();
     id = termNames.indexOf(name);
     if (id < 0) {
-      id = nonterminals.indexOf(name);
+      id = nontermNames.indexOf(name)+1000;
+      if (id < 0) {
+        throw new RuntimeException("Unknown symbol " + name);
+      }
     }
     productionSymbols.add(id);
   }
@@ -186,6 +215,15 @@ class GRBuilder implements Serializable {
    */
   public static GRBuilder buildLanguage(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
     return new GRBuilder(grammarSourceFile);
+  }
+  
+  public String getJavaSourceCode(String sourcePackage) {
+    StringBuilder source = new StringBuilder();
+    if (!sourcePackage.isEmpty()) {
+      source.append("package ").append(sourcePackage).append(";\n");
+    }
+    source.append(javaSource);
+    return source.toString();
   }
   
   public int getRootTerminalId() {
