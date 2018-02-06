@@ -121,6 +121,22 @@ class GRBuilder implements Serializable {
       List<Integer> productionSymbols = new ArrayList<>();
       productionSymbols.add(id);
       
+      Node idList = nonTermDef.get(ID_LIST);
+      while(idList.hasSymbols()) {
+        Node termListItem = idList.get(ID);
+        name = ((Terminal) termListItem.symbol()).getName();
+        id = termNames.indexOf(name);
+        if (id < 0) {
+          id = nonterminals.indexOf(name);
+        }
+        productionSymbols.add(id);
+        idList = idList.get(ID_LIST);
+      }
+      
+      createNewProductionRule(pruleStart, productionSymbols);
+      pruleStart++;
+      productionSymbols = new ArrayList<>();
+      
       Node orOpt = nonTermDef.get(OR_OPTION);
       while (orOpt.hasSymbols()) {
         Node orOptId = orOpt.get(ID);
@@ -131,7 +147,7 @@ class GRBuilder implements Serializable {
         }
         productionSymbols.add(id);
         
-        Node idList = orOpt.get(ID_LIST);
+        idList = orOpt.get(ID_LIST);
         while(idList.hasSymbols()) {
           Node termListItem = idList.get(ID);
           name = ((Terminal) termListItem.symbol()).getName();
@@ -142,18 +158,25 @@ class GRBuilder implements Serializable {
           productionSymbols.add(id);
           idList = idList.get(ID_LIST);
         }
+        
+        createNewProductionRule(pruleStart, productionSymbols);
+        pruleStart++;
+        productionSymbols = new ArrayList<>();
+        
         orOpt = orOpt.get(OR_OPTION);
       }
 
-      int[] productionSymbolIds = new int[productionSymbols.size()];
+      nonTermDefs = nonTermDefs.get(NONTERMINAL_DEFS);
+    }
+  }
+  
+  private void createNewProductionRule(int pruleId, List<Integer> productionSymbols) {
+    int[] productionSymbolIds = new int[productionSymbols.size()];
       for (int i = 0; i < productionSymbolIds.length; i++){
         productionSymbolIds[i] = productionSymbols.get(i);
       }
-      ProductionRule prule = new ProductionRule(pruleStart, productionSymbolIds);
+      ProductionRule prule = new ProductionRule(pruleId, productionSymbolIds);
       productionRules.add(prule);
-      pruleStart++;
-      nonTermDefs = nonTermDefs.get(NONTERMINAL_DEFS);
-    }
   }
   
   /**
