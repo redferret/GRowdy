@@ -2,8 +2,8 @@
 package growdy;
 
 import org.junit.Test;
-import static growdy.GRowdy.*;
 import static growdy.testUtils.TestUtils.*;
+import static growdy.GRConstants.*;
 
 /**
  *

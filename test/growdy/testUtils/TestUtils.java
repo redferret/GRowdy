@@ -10,7 +10,7 @@ import growdy.exceptions.ParseException;
 import growdy.exceptions.SyntaxException;
 import java.io.IOException;
 import static org.junit.Assert.*;
-import static growdy.GRowdy.*;
+import static growdy.GRConstants.*;
 
 /**
  *
@@ -27,7 +27,7 @@ public class TestUtils {
   
   public static Node getTestProgram(String testProgram) {
     try {
-      parser.parse(testProgram);
+      parser.parseSource(testProgram);
       try {
         builder.buildAs(parser, GR);
       } catch (SyntaxException e) {

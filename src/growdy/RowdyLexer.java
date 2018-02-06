@@ -69,15 +69,15 @@ public class RowdyLexer {
   }
 
   /**
-   * Parses the code file given. New tokens will be generated each time parse is
-   * called on a given file.
+   * Parses the code file given. New tokens will be generated each time parseSource is
+ called on a given file.
    *
    * @param fileName The code file being parsed.
    * @throws java.io.IOException
    * @throws java.io.FileNotFoundException
-   * @throws rowdy.exceptions.SyntaxException
+   * @throws growdy.exceptions.ParseException
    */
-  public void parse(String fileName) throws IOException, FileNotFoundException, ParseException {
+  public void parseSource(String fileName) throws IOException, FileNotFoundException, ParseException {
     fileStack = parseFile(fileName);
   }
 
@@ -107,7 +107,7 @@ public class RowdyLexer {
     return symbols;
   }
   
-  public List<String> parseCode(String line) throws ParseException {
+  private List<String> parseCode(String line) throws ParseException {
     List<String> symbols = new LinkedList<>();
     boolean eoln = false;
     char cur;
