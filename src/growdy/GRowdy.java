@@ -4,7 +4,10 @@ package growdy;
 import java.io.IOException;
 import growdy.exceptions.ParseException;
 import growdy.exceptions.SyntaxException;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 
 /**
  * GRowdy is an object that will take a grammar resource file built using
@@ -23,6 +26,16 @@ public class GRowdy {
   private GRowdy(String grammarFileName) {
     // Get the grammar as a resource (Deserialize) and use it to fill in
     // everything needed for a Language and a Lexer
+    
+    try {
+      try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("lang\\"+grammarFileName+".gr"); 
+              ObjectInputStream in = new ObjectInputStream(inputStream)) {
+        grObject = (GRBuilder) in.readObject();
+      }
+      } catch (IOException | ClassNotFoundException i) {
+        throw new RuntimeException("There was a problem loading the Grammar: " + i.getLocalizedMessage());
+      }
+    
     ProductionRule[] grammarRules = grObject.getGrammarRules();
     NonTerminal[] nonterminals = grObject.getNonterminals();
     String[] terms = grObject.getTerms();
