@@ -19,3 +19,7 @@ build/test/results/TEST-growdy\.GRowdyTest\.xml
 build/test/results/
 
 dist/lang/
+
+build/
+
+nbproject/private/
