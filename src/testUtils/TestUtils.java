@@ -1,5 +1,5 @@
 
-package growdy.testUtils;
+package testUtils;
 
 import growdy.RowdyBuilder;
 import growdy.RowdyLexer;
