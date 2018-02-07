@@ -43,12 +43,12 @@ public class GRowdyTest {
     testContainsSymbols(nontermDefs, new int[]{NONTERMINAL_DEF, SEMICOLON, NONTERMINAL_DEFS});
     
     Node nontermDef = getFromAndTestNotNull(nontermDefs, NONTERMINAL_DEF);
-    testContainsSymbols(nontermDef, new int[]{ID, NONTERMINAL_PARAMS, IS, ID, ID_LIST, OR_OPTION});
+    testContainsSymbols(nontermDef, new int[]{ID, NONTERMINAL_PARAMS, IS, ID, STAR_OPT, ID_LIST, OR_OPTION});
     
     Node params = getFromAndTestNotNull(nontermDef, NONTERMINAL_PARAMS);
     testContainsSymbols(params, new int[]{LEFTPAREN, TERMINAL_PARAMS, RIGHTPAREN});
     Node idList = getFromAndTestNotNull(nontermDef, ID_LIST);
-    testContainsSymbols(idList, new int[]{ID, ID_LIST});
+    testContainsSymbols(idList, new int[]{ID, STAR_OPT, ID_LIST});
     
     Node termParams = getFromAndTestNotNull(params, TERMINAL_PARAMS);
     testContainsSymbols(termParams, new int[]{ID, TERMINAL_PARAMS});

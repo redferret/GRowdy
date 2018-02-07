@@ -12,10 +12,12 @@ import java.util.List;
 public class NonTerminal extends Symbol implements Serializable{
 
   private final List<Hint> hints;
+  private int groupId;
   private boolean trim;
 
   public NonTerminal(String symbol, int id, int[][] hints) {
     super(symbol, id);
+    groupId = 0;
     trim = false;
     this.hints = new ArrayList<>();
     final int TERMINAL = 0, PRODUCTION_RULE = 1;
@@ -25,6 +27,14 @@ public class NonTerminal extends Symbol implements Serializable{
     }
   }
 
+  public void setGroupId(int groupId) {
+    this.groupId = groupId;
+  }
+
+  public int getGroupId() {
+    return groupId;
+  }
+  
   public Hint getHint(int id) {
     if (hints == null) {
       return null;
