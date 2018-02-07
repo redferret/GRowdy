@@ -2,7 +2,7 @@
 package growdy;
 
 import org.junit.Test;
-import static testUtils.TestUtils.*;
+import static growdy.testUtils.TestUtils.*;
 import static growdy.GRConstants.*;
 
 /**
