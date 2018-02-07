@@ -31,7 +31,8 @@ public class GRBuilder implements Serializable {
   private final int constId = 1;
   
   private transient String javaSource;
-  private transient final Language grLang = Language.build(GRConstants.grammarRules, GRConstants.terms, GRConstants.nonterminals);
+  private transient final Language grLang = Language.build(GRConstants.grammarRules, 
+          GRConstants.terms, GRConstants.nonterminals);
   private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym, 0, 1);
   private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang);
   
@@ -134,6 +135,7 @@ public class GRBuilder implements Serializable {
   private void buildProductionRules(Node nonTermDefs) {
     int pruleStart = 1000;
     while (nonTermDefs.hasSymbols()) {
+      int groupId = 0;
       Node nonTermDef = nonTermDefs.get(NONTERMINAL_DEF);
       Node terminal = nonTermDef.get(ID, 1);
       Node starOpt = nonTermDef.get(STAR_OPT);
@@ -146,6 +148,7 @@ public class GRBuilder implements Serializable {
         }
         if (starOpt.hasSymbols()){
           nonterminals.get(id).markAsTrimmable();
+          nonterminals.get(id).setGroupId(groupId);
         }
         id += 1000;
       }
@@ -154,17 +157,18 @@ public class GRBuilder implements Serializable {
       
       Node idList = nonTermDef.get(ID_LIST);
       while(idList.hasSymbols()) {
-        addSymbolId(idList, productionSymbols);
+        addSymbolId(idList, groupId, productionSymbols);
         idList = idList.get(ID_LIST);
       }
      
       Node orOpt = nonTermDef.get(OR_OPTION);
       while (orOpt.hasSymbols()) {
-        addSymbolId(orOpt, productionSymbols);
+        groupId++;
+        addSymbolId(orOpt, groupId, productionSymbols);
         
         idList = orOpt.get(ID_LIST);
         while(idList.hasSymbols()) {
-          addSymbolId(idList, productionSymbols);
+          addSymbolId(idList, groupId, productionSymbols);
           idList = idList.get(ID_LIST);
         }
         
@@ -178,7 +182,7 @@ public class GRBuilder implements Serializable {
     }
   }
 
-  private void addSymbolId(Node idList, List<Integer> productionSymbols) {
+  private void addSymbolId(Node idList, int groupId, List<Integer> productionSymbols) {
     String name;
     int id;
     Node termListItem = idList.get(ID);
@@ -192,6 +196,7 @@ public class GRBuilder implements Serializable {
       }
       if (starOpt.hasSymbols()){
         nonterminals.get(id).markAsTrimmable();
+        nonterminals.get(id).setGroupId(groupId);
       }
       id += 1000;
     }
