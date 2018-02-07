@@ -220,7 +220,7 @@ class GRBuilder implements Serializable {
   public String getJavaSourceCode(String sourcePackage) {
     StringBuilder source = new StringBuilder();
     if (!sourcePackage.isEmpty()) {
-      source.append("package ").append(sourcePackage).append(";\n");
+      source.append("package ").append(sourcePackage).append(".lang;\n");
     }
     source.append(javaSource);
     return source.toString();
