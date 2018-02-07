@@ -37,7 +37,7 @@ class GRBuilder implements Serializable {
   
   private GRBuilder(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
     lexer.parseSource(grammarSourceFile);
-    builder.buildAs(lexer, GR);
+    builder.buildAs(lexer, GR, false);
     
     productionRules = new ArrayList<>();
     nonterminals = new ArrayList<>();
@@ -97,8 +97,8 @@ class GRBuilder implements Serializable {
           termNames.add(constId, idName);
           break;
         case CONST:
-          termSymbols.add(atomic.getName());
-          termNames.add(idName);
+          termSymbols.add(atomic.getName().replaceAll("\"", ""));
+          termNames.add(idName.replaceAll("\"", ""));
           break;
       }
       termDefs = termDefs.get(TERMINAL_DEFS);
@@ -136,13 +136,18 @@ class GRBuilder implements Serializable {
     while (nonTermDefs.hasSymbols()) {
       Node nonTermDef = nonTermDefs.get(NONTERMINAL_DEF);
       Node terminal = nonTermDef.get(ID, 1);
+      Node starOpt = nonTermDef.get(STAR_OPT);
       String name = ((Terminal)terminal.symbol()).getName();
       int id = termNames.indexOf(name);
       if (id < 0) {
-        id = nontermNames.indexOf(name)+1000;
+        id = nontermNames.indexOf(name);
         if (id < 0) {
           throw new RuntimeException("Unknown symbol " + name);
         }
+        if (starOpt.hasSymbols()){
+          nonterminals.get(id).markAsTrimmable();
+        }
+        id += 1000;
       }
       List<Integer> productionSymbols = new ArrayList<>();
       productionSymbols.add(id);
@@ -152,11 +157,7 @@ class GRBuilder implements Serializable {
         addSymbolId(idList, productionSymbols);
         idList = idList.get(ID_LIST);
       }
-      
-      createNewProductionRule(pruleStart, productionSymbols);
-      pruleStart++;
-      productionSymbols = new ArrayList<>();
-      
+     
       Node orOpt = nonTermDef.get(OR_OPTION);
       while (orOpt.hasSymbols()) {
         addSymbolId(orOpt, productionSymbols);
@@ -167,13 +168,12 @@ class GRBuilder implements Serializable {
           idList = idList.get(ID_LIST);
         }
         
-        createNewProductionRule(pruleStart, productionSymbols);
-        pruleStart++;
-        productionSymbols = new ArrayList<>();
-        
         orOpt = orOpt.get(OR_OPTION);
       }
 
+      createNewProductionRule(pruleStart, productionSymbols);
+      pruleStart++;
+      
       nonTermDefs = nonTermDefs.get(NONTERMINAL_DEFS);
     }
   }
@@ -182,13 +182,18 @@ class GRBuilder implements Serializable {
     String name;
     int id;
     Node termListItem = idList.get(ID);
+    Node starOpt = idList.get(STAR_OPT);
     name = ((Terminal) termListItem.symbol()).getName();
     id = termNames.indexOf(name);
     if (id < 0) {
-      id = nontermNames.indexOf(name)+1000;
+      id = nontermNames.indexOf(name);
       if (id < 0) {
         throw new RuntimeException("Unknown symbol " + name);
       }
+      if (starOpt.hasSymbols()){
+        nonterminals.get(id).markAsTrimmable();
+      }
+      id += 1000;
     }
     productionSymbols.add(id);
   }
@@ -217,11 +222,9 @@ class GRBuilder implements Serializable {
     return new GRBuilder(grammarSourceFile);
   }
   
-  public String getJavaSourceCode(String sourcePackage) {
+  public String getJavaSourceCode() {
     StringBuilder source = new StringBuilder();
-    if (!sourcePackage.isEmpty()) {
-      source.append("package ").append(sourcePackage).append(".lang;\n");
-    }
+    source.append("package ").append("lang;\n");
     source.append(javaSource);
     return source.toString();
   }

@@ -80,7 +80,7 @@ public class GRowdy {
    */
   public void buildFromSource(String sourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
     parser.parseSource(sourceFile);
-    builder.buildAs(parser, grObject.getRootTerminalId());
+    builder.buildAs(parser, grObject.getRootTerminalId(), true);
   }
   
   /**
@@ -93,7 +93,7 @@ public class GRowdy {
    */
   public void buildFromString(String sourceCode, int programNode) throws ParseException, SyntaxException {
     parser.parseLine(sourceCode);
-    builder.buildAs(parser, programNode);
+    builder.buildAs(parser, programNode, true);
   }
   
 }

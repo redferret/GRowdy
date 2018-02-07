@@ -6,19 +6,20 @@ package growdy;
  * @author Richard
  */
 public class GRConstants {
-  public static final String specialSym = "< > | => ( ) ;";
+  public static final String specialSym = "< > | => ( ) ; *";
   public static final String[] terms = {"ID", "literal", "<", ">", "(", ")", "|", 
-    "BEGIN", "TERMINAL", "SPECIAL", "=>", ";", "id", "constant"};
+    "BEGIN", "TERMINAL", "SPECIAL", "=>", ";", "id", "constant", "*"};
   
   public static final int ID = 0, CONST = 1, LEFTCARET = 2, RIGHTCARET = 3,
           LEFTPAREN = 4, RIGHTPAREN = 5, OR = 6, BEGIN = 7, TERMINAL = 8, 
-          SPECIAL = 9, IS = 10, SEMICOLON = 11, IDENT = 12, CONSTANT = 13;
+          SPECIAL = 9, IS = 10, SEMICOLON = 11, IDENT = 12, CONSTANT = 13,
+          STAR = 14;
   
   public static final int GR = 100, GRAMMAR = 101, TERMINAL_BODY = 102,
           SPECIAL_DEF = 103, TERMINAL_DEFS = 104, TERMINAL_DEF = 105, 
           ATOMIC = 106, GRAMMAR_BODY = 107,NONTERMINAL_DEFS = 108,OR_OPTION = 109,
           NONTERMINAL_DEF = 110,NONTERMINAL_PARAMS = 111,TERMINAL_PARAMS = 112,
-          ID_LIST = 113;
+          ID_LIST = 113, STAR_OPT = 114;
           
   public static final int PRule_GR = 0,PRule_GRAMMAR = 1,
           PRule_TERMINAL_BODY = 2,PRule_SPECIAL_DEF = 3, 
@@ -27,7 +28,8 @@ public class GRConstants {
           PRule_NONTERMINAL_DEFS = 8,PRule_OR_OPT = 9,
           PRule_NONTERMINAL_DEF = 10,PRule_NONTERMINAL_PARAMS = 11,
           PRule_TERMINAL_PARAMS = 12, PRule_IDENT = 13, PRule_CONSTANT = 14,
-          PRule_CONST = 15, PRule_ID_LIST = 16, PRule_END = 100;
+          PRule_CONST = 15, PRule_ID_LIST = 16, PRule_STAR_OPT = 17, 
+          PRule_END = 100;
   
   public static final NonTerminal[] nonterminals = {
     new NonTerminal("prog", GR, 
@@ -59,6 +61,8 @@ public class GRConstants {
             new int[][]{{LEFTPAREN, PRule_NONTERMINAL_PARAMS}}),
     new NonTerminal("term-params", TERMINAL_PARAMS, 
             new int[][]{{ID, PRule_TERMINAL_PARAMS}}),
+    new NonTerminal("star-opt", STAR_OPT,
+            new int[][]{{STAR, PRule_STAR_OPT}}),
   };
   
   
@@ -91,16 +95,19 @@ public class GRConstants {
     new ProductionRule(PRule_NONTERMINAL_DEFS, 
             new int[]{NONTERMINAL_DEF, SEMICOLON, NONTERMINAL_DEFS}),
     new ProductionRule(PRule_OR_OPT, 
-            new int[]{OR, ID, ID_LIST, OR_OPTION}),
+            new int[]{OR, ID, STAR_OPT, ID_LIST, OR_OPTION}),
     new ProductionRule(PRule_NONTERMINAL_DEF, 
-            new int[]{ID, NONTERMINAL_PARAMS, IS, ID, ID_LIST, OR_OPTION}),
+            new int[]{ID, NONTERMINAL_PARAMS, IS, ID, STAR_OPT, ID_LIST, OR_OPTION}),
     new ProductionRule(PRule_ID_LIST, 
-            new int[]{ID, ID_LIST}),
+            new int[]{ID, STAR_OPT, ID_LIST}),
     
     new ProductionRule(PRule_NONTERMINAL_PARAMS, 
             new int[]{LEFTPAREN, TERMINAL_PARAMS, RIGHTPAREN}),
     new ProductionRule(PRule_TERMINAL_PARAMS, 
             new int[]{ID, TERMINAL_PARAMS}),
+    
+    new ProductionRule(PRule_STAR_OPT,
+            new int[]{STAR}),
     
     new ProductionRule(PRule_END, 
             new int[]{})

@@ -17,6 +17,7 @@ public class RowdyBuilder {
   private Token currentToken;
   private final Language language;
   private Node root;
+  private boolean trim;
   
   private RowdyBuilder(Language language) {
     line = 1;
@@ -32,8 +33,9 @@ public class RowdyBuilder {
     return root;
   }
   
-  public void buildAs(RowdyLexer parser, int programType) throws SyntaxException {
+  public void buildAs(RowdyLexer parser, int programType, boolean trim) throws SyntaxException {
     this.parser = parser;
+    this.trim = trim;
     NonTerminal program = (NonTerminal) language.getSymbol(programType);
     root = new Node(program, 1);
     currentToken = this.parser.getToken();
@@ -77,6 +79,10 @@ public class RowdyBuilder {
         if (currentToken == null) break;
         rule = produce((NonTerminal) symbol, currentToken.getID());
         addToNode(current, rule);
+        if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {
+          children.remove(i--);
+          continue;
+        }
         build(current);
       } else {
         if (symbol.id() != currentToken.getID()) {
@@ -94,8 +100,21 @@ public class RowdyBuilder {
         if (currentToken == null) break;
       }
     }
+
   }
 
+  private void trimEmptyNodes(Node parent) {
+    List<Node> children = parent.getAll();
+    Node current;
+    for (int i = 0; i < children.size(); i++) {
+      current = children.get(i);
+      if (!current.hasSymbols()) {
+        children.remove(i--);
+      }
+    }
+    parent.getAll();
+  }
+  
   /**
    * Builds a rule from the given NonTerminal using the id to map onto a hint.
    *
