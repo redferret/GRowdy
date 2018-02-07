@@ -17,7 +17,6 @@ public class RowdyBuilder {
   private Token currentToken;
   private final Language language;
   private Node root;
-  private boolean trim;
   
   private RowdyBuilder(Language language) {
     line = 1;
@@ -33,9 +32,8 @@ public class RowdyBuilder {
     return root;
   }
   
-  public void buildAs(RowdyLexer parser, int programType, boolean trim) throws SyntaxException {
+  public void buildAs(RowdyLexer parser, int programType) throws SyntaxException {
     this.parser = parser;
-    this.trim = trim;
     NonTerminal program = (NonTerminal) language.getSymbol(programType);
     root = new Node(program, 1);
     currentToken = this.parser.getToken();
@@ -76,7 +74,12 @@ public class RowdyBuilder {
       current = children.get(i);
       symbol = current.symbol();
       if (symbol instanceof NonTerminal) {
-        if (currentToken == null) break;
+        if (currentToken == null) {
+          if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {
+            children.remove(i--);
+          }
+          continue;
+        }
         rule = produce((NonTerminal) symbol, currentToken.getID());
         addToNode(current, rule);
         if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {

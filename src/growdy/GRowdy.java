@@ -2,12 +2,9 @@
 package growdy;
 
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import growdy.exceptions.ParseException;
 import growdy.exceptions.SyntaxException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 
 /**
  * GRowdy is an object that will take a grammar resource file built using
@@ -21,21 +18,12 @@ public class GRowdy {
   private final Language language;
   private final RowdyLexer parser;
   private final RowdyBuilder builder;
-  private GRBuilder grObject;
+  private final GRBuilder grObject;
   
-  private GRowdy(String grammarFileName) {
+  private GRowdy(GRBuilder grObject) {
     // Get the grammar as a resource (Deserialize) and use it to fill in
     // everything needed for a Language and a Lexer
-    
-    try {
-      try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("lang\\"+grammarFileName+".gr"); 
-              ObjectInputStream in = new ObjectInputStream(inputStream)) {
-        grObject = (GRBuilder) in.readObject();
-      }
-      } catch (IOException | ClassNotFoundException i) {
-        throw new RuntimeException("There was a problem loading the Grammar: " + i.getLocalizedMessage());
-      }
-    
+    this.grObject = grObject;
     ProductionRule[] grammarRules = grObject.getGrammarRules();
     NonTerminal[] nonterminals = grObject.getNonterminals();
     String[] terms = grObject.getTerms();
@@ -52,11 +40,11 @@ public class GRowdy {
    * Get an instance of your language by passing in the name of the grammar
    * resource file. This file should be packaged inside your interpreters 
    * JAR file.
-   * @param grammarFileName The grammar resource file name
+   * @param grObject
    * @return An instance of your language builder
    */
-  public static GRowdy getInstance(String grammarFileName) {
-    return new GRowdy(grammarFileName);
+  public static GRowdy getInstance(GRBuilder grObject) {
+    return new GRowdy(grObject);
   }
   
   /**
@@ -80,7 +68,7 @@ public class GRowdy {
    */
   public void buildFromSource(String sourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
     parser.parseSource(sourceFile);
-    builder.buildAs(parser, grObject.getRootTerminalId(), true);
+    builder.buildAs(parser, grObject.getRootTerminalId());
   }
   
   /**
@@ -93,7 +81,7 @@ public class GRowdy {
    */
   public void buildFromString(String sourceCode, int programNode) throws ParseException, SyntaxException {
     parser.parseLine(sourceCode);
-    builder.buildAs(parser, programNode, true);
+    builder.buildAs(parser, programNode);
   }
   
 }

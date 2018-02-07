@@ -17,7 +17,7 @@ import static growdy.GRConstants.*;
  * programming language.
  * @author Richard DeSilvey
  */
-class GRBuilder implements Serializable {
+public class GRBuilder implements Serializable {
 
   private final List<ProductionRule> productionRules;
   private final List<NonTerminal> nonterminals;
@@ -37,7 +37,7 @@ class GRBuilder implements Serializable {
   
   private GRBuilder(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
     lexer.parseSource(grammarSourceFile);
-    builder.buildAs(lexer, GR, false);
+    builder.buildAs(lexer, GR);
     
     productionRules = new ArrayList<>();
     nonterminals = new ArrayList<>();
@@ -222,9 +222,13 @@ class GRBuilder implements Serializable {
     return new GRBuilder(grammarSourceFile);
   }
   
-  public String getJavaSourceCode() {
+  public String getJavaSourceCode(String sourcePackage) {
     StringBuilder source = new StringBuilder();
-    source.append("package ").append("lang;\n");
+    if (sourcePackage.isEmpty()){
+      source.append("package ").append("lang;\n");
+    } else {
+      source.append("package ").append(sourcePackage).append(".lang;\n");
+    }
     source.append(javaSource);
     return source.toString();
   }

@@ -32,8 +32,12 @@ public class MainGR {
     }
     String fileName = args[0];
     String resourcePath = "";
+    String sourcePackage = "";
     if (args.length > 1) {
       resourcePath = args[1];
+    }
+    if (args.length > 2) {
+      sourcePackage = args[2];
     }
     try {
       GRBuilder gr = GRBuilder.buildLanguage(fileName);
@@ -66,7 +70,7 @@ public class MainGR {
       }
       
       try (FileWriter javaSourceOut = new FileWriter(javaSourceFile)) {
-        javaSourceOut.write(gr.getJavaSourceCode());
+        javaSourceOut.write(gr.getJavaSourceCode(sourcePackage));
       }
     } catch (IOException | ParseException | SyntaxException ex) {
       Logger.getLogger(GRBuilder.class.getName()).log(Level.SEVERE, null, ex);
