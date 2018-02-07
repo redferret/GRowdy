@@ -74,9 +74,18 @@ public class RowdyBuilder {
       current = children.get(i);
       symbol = current.symbol();
       if (symbol instanceof NonTerminal) {
-        if (currentToken == null) break;
+        if (currentToken == null) {
+          if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {
+            children.remove(i--);
+          }
+          continue;
+        }
         rule = produce((NonTerminal) symbol, currentToken.getID());
         addToNode(current, rule);
+        if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {
+          children.remove(i--);
+          continue;
+        }
         build(current);
       } else {
         if (symbol.id() != currentToken.getID()) {
@@ -94,8 +103,21 @@ public class RowdyBuilder {
         if (currentToken == null) break;
       }
     }
+
   }
 
+  private void trimEmptyNodes(Node parent) {
+    List<Node> children = parent.getAll();
+    Node current;
+    for (int i = 0; i < children.size(); i++) {
+      current = children.get(i);
+      if (!current.hasSymbols()) {
+        children.remove(i--);
+      }
+    }
+    parent.getAll();
+  }
+  
   /**
    * Builds a rule from the given NonTerminal using the id to map onto a hint.
    *

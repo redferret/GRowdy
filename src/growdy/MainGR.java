@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package growdy;
 
 import growdy.exceptions.ParseException;
@@ -38,13 +34,10 @@ public class MainGR {
     String resourcePath = "";
     String sourcePackage = "";
     if (args.length > 1) {
-      sourcePackage = args[1];
-      if (sourcePackage.contains("\\")){
-        throw new IllegalArgumentException("Invalid Java Package");
-      }
+      resourcePath = args[1];
     }
     if (args.length > 2) {
-      resourcePath = args[2];
+      sourcePackage = args[2];
     }
     try {
       GRBuilder gr = GRBuilder.buildLanguage(fileName);
