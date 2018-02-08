@@ -11,9 +11,9 @@ import java.util.Arrays;
  */
 public class ProductionRule implements Serializable {
   private final int id;
-  private final int[] simpleProduction;
+  private final Rule[] simpleProduction;
 
-  public ProductionRule(int id, int[] simpleProduction) {
+  public ProductionRule(int id, Rule[] simpleProduction) {
     this.id = id;
     this.simpleProduction = simpleProduction;
   }
@@ -22,7 +22,7 @@ public class ProductionRule implements Serializable {
     return id;
   }
 
-  public int[] getProductionSymbols() {
+  public Rule[] getProductionSymbols() {
     return simpleProduction;
   }
  

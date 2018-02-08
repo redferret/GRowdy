@@ -11,7 +11,7 @@ public abstract class Symbol implements Serializable {
 
   protected String symbol;
   protected int id;
-
+  
   public Symbol() {
     symbol = "";
     id = -1;

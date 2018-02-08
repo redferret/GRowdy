@@ -1,7 +1,10 @@
 
 package growdy;
 
+import growdy.exceptions.AmbiguousGrammarException;
 import java.util.List;
+import java.util.Deque;
+import java.util.ArrayDeque;
 import growdy.exceptions.SyntaxException;
 
 /**
@@ -17,11 +20,12 @@ public class RowdyBuilder {
   private Token currentToken;
   private final Language language;
   private Node root;
+  private Deque<Token> lookAheadQueue;
   
   private RowdyBuilder(Language language) {
     line = 1;
     this.language = language;
-    
+    lookAheadQueue = new ArrayDeque<>();
   }
   
   public static RowdyBuilder getBuilder(Language language){
@@ -32,7 +36,7 @@ public class RowdyBuilder {
     return root;
   }
   
-  public void buildAs(RowdyLexer parser, int programType) throws SyntaxException {
+  public void buildAs(RowdyLexer parser, int programType) throws SyntaxException, AmbiguousGrammarException {
     this.parser = parser;
     NonTerminal program = (NonTerminal) language.getSymbol(programType);
     root = new Node(program, 1);
@@ -68,7 +72,7 @@ public class RowdyBuilder {
    * @param parent
    * @throws growdy.exceptions.SyntaxException
    */
-  public void build(Node parent) throws SyntaxException {
+  public void build(Node parent) throws SyntaxException, AmbiguousGrammarException {
     Symbol symbol;
     ProductionSymbols rule;
     List<Node> children = parent.getAll();
@@ -78,17 +82,14 @@ public class RowdyBuilder {
       symbol = current.symbol();
       if (symbol instanceof NonTerminal) {
         if (currentToken == null) {
-          if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {
+          if (!current.hasSymbols() && children.get(i).isTrimmable()) {
             children.remove(i--);
           }
           continue;
         }
         rule = produce((NonTerminal) symbol, currentToken.getID());
         addToNode(current, rule);
-        if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {
-          children.remove(i--);
-          continue;
-        }
+        trimChildren(current);
         build(current);
       } else {
         if (symbol.id() != currentToken.getID()) {
@@ -108,17 +109,31 @@ public class RowdyBuilder {
     }
 
   }
-
-  private void trimEmptyNodes(Node parent) {
-    List<Node> children = parent.getAll();
-    Node current;
+  
+  private void trimChildren(Node current) throws AmbiguousGrammarException {
+    List<Node> children = current.getAll();
+    ProductionSymbols rule;
     for (int i = 0; i < children.size(); i++) {
-      current = children.get(i);
-      if (!current.hasSymbols()) {
-        children.remove(i--);
+      Symbol symbol = children.get(i).symbol();
+      if (symbol instanceof NonTerminal){
+        rule = produce((NonTerminal) symbol, currentToken.getID());
+        if (rule.getSymbols().length == 0 && children.get(i).isTrimmable()){
+          children.remove(i--);
+        }
       }
     }
-    parent.getAll();
+    int trimmableCount = 0;
+    for (int i = 0; i < children.size(); i++) {
+      Symbol symbol = children.get(i).symbol();
+      if (symbol instanceof NonTerminal) {
+        if (children.get(i).isTrimmable()){
+          trimmableCount++;
+        }
+      }
+    }
+    if (trimmableCount > 1) {
+      throw new AmbiguousGrammarException((NonTerminal)current.symbol());
+    }
   }
   
   /**
@@ -138,12 +153,16 @@ public class RowdyBuilder {
    * production rule.
    *
    * @param parent The parent being added to
-   * @param rule The production rule.
+   * @param productionRule
    */
-  public void addToNode(Node parent, ProductionSymbols rule) {
-    Symbol[] symbols = rule.getSymbols();
-    for (Symbol symbol : symbols) {
+  public void addToNode(Node parent, ProductionSymbols productionRule) {
+    Symbol[] symbols = productionRule.getSymbols();
+    Rule[] rules = productionRule.getRules();
+    for (int i = 0; i < symbols.length; i++){
+      Symbol symbol = symbols[i];
+      Rule rule = rules[i];
       Node node = new Node(symbol, line);
+      node.setTrimmable(rule.isTrimmable());
       parent.add(node);
     }
   }

@@ -12,11 +12,9 @@ import java.util.List;
 public class NonTerminal extends Symbol implements Serializable{
 
   private final List<Hint> hints;
-  private boolean trim;
 
   public NonTerminal(String symbol, int id, int[][] hints) {
     super(symbol, id);
-    trim = false;
     this.hints = new ArrayList<>();
     final int TERMINAL = 0, PRODUCTION_RULE = 1;
     for (int[] hint : hints) {
@@ -35,13 +33,5 @@ public class NonTerminal extends Symbol implements Serializable{
       }
     }
     return null;
-  }
-
-  public boolean isTrimmable() {
-    return trim;
-  }
-  
-  public void markAsTrimmable() {
-    this.trim = true;
   }
 }

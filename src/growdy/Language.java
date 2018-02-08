@@ -41,13 +41,14 @@ public class Language {
     Symbol symbs[];
     for (ProductionRule productionRule : grammarRules) {
       int grammarId = productionRule.getId();
-      int[] productionSymbols = productionRule.getProductionSymbols();
-      symbs = new Symbol[productionSymbols.length];
-      for (int j = 0; j < productionSymbols.length; j++) {
-        int symbolID = productionSymbols[j];
+      Rule[] productionRules = productionRule.getProductionSymbols();
+      symbs = new Symbol[productionRules.length];
+      for (int j = 0; j < productionRules.length; j++) {
+        int symbolID = productionRules[j].getNonterminalId();
         symbs[j] = SYMBOLS.get(symbolID);
       }
-      GRAMMAR.put(grammarId, new ProductionSymbols(symbs));
+      
+      GRAMMAR.put(grammarId, new ProductionSymbols(symbs, productionRules));
     }
   }
 

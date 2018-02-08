@@ -11,14 +11,24 @@ public class Node {
   private final Symbol def;
   private Boolean seqActive;
   private final int line;
+  private boolean trimmable;
 
   public Node(Symbol def, int lineNumber) {
     children = new ArrayList<>();
     this.def = def;
     seqActive = false;
     this.line = lineNumber;
+    trimmable = false;
   }
 
+  public boolean isTrimmable() {
+    return trimmable;
+  }
+
+  public void setTrimmable(boolean trimmable) {
+    this.trimmable = trimmable;
+  }
+  
   public Boolean isSeqActive() {
     return seqActive;
   }

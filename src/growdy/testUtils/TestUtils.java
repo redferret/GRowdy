@@ -11,6 +11,7 @@ import growdy.exceptions.SyntaxException;
 import java.io.IOException;
 import static org.junit.Assert.*;
 import static growdy.GRConstants.*;
+import growdy.exceptions.AmbiguousGrammarException;
 
 /**
  *
@@ -30,7 +31,7 @@ public class TestUtils {
       parser.parseSource(testProgram);
       try {
         builder.buildAs(parser, GR);
-      } catch (SyntaxException e) {
+      } catch (SyntaxException | AmbiguousGrammarException e) {
         fail("Builder failed to compile: " + e.getLocalizedMessage());
       }
       Node root = builder.getProgram();
