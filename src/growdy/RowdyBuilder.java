@@ -73,7 +73,6 @@ public class RowdyBuilder {
     ProductionSymbols rule;
     List<Node> children = parent.getAll();
     Node current;
-    int groupId = 0;
     for (int i = 0; i < children.size(); i++) {
       current = children.get(i);
       symbol = current.symbol();
@@ -84,17 +83,12 @@ public class RowdyBuilder {
           }
           continue;
         }
-        int ntGroupId = ((NonTerminal)symbol).getGroupId();
-        if (ntGroupId == groupId){
-          rule = produce((NonTerminal) symbol, currentToken.getID());
-          addToNode(current, rule);
-        }
+        rule = produce((NonTerminal) symbol, currentToken.getID());
+        addToNode(current, rule);
         if (!current.hasSymbols() && ((NonTerminal)symbol).isTrimmable()) {
-          groupId ++;
           children.remove(i--);
           continue;
         }
-        groupId = ((NonTerminal)symbol).getGroupId();
         build(current);
       } else {
         if (symbol.id() != currentToken.getID()) {
