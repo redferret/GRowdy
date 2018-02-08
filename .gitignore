@@ -23,3 +23,5 @@ dist/lang/
 build/
 
 nbproject/private/
+
+dist/
