@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import static growdy.GRConstants.*;
+import growdy.exceptions.AmbiguousGrammarException;
 
 /**
  * This class builds the grammar for your language and will be used as a 
@@ -36,7 +37,7 @@ public class GRBuilder implements Serializable {
   private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym, 0, 1);
   private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang);
   
-  private GRBuilder(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
+  private GRBuilder(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
     lexer.parseSource(grammarSourceFile);
     builder.buildAs(lexer, GR);
     
@@ -141,18 +142,22 @@ public class GRBuilder implements Serializable {
       Node starOpt = nonTermDef.get(STAR_OPT);
       String name = ((Terminal)terminal.symbol()).getName();
       int id = termNames.indexOf(name);
+      Rule rule;
       if (id < 0) {
         id = nontermNames.indexOf(name);
         if (id < 0) {
           throw new RuntimeException("Unknown symbol " + name);
         }
-        if (starOpt.hasSymbols()){
-          nonterminals.get(id).markAsTrimmable();
-        }
         id += 1000;
+        rule = new Rule(id);
+        if (starOpt.hasSymbols()){
+          rule.markAsTrimmable();
+        }
+      } else {
+        rule = new Rule(id);
       }
-      List<Integer> productionSymbols = new ArrayList<>();
-      productionSymbols.add(id);
+      List<Rule> productionSymbols = new ArrayList<>();
+      productionSymbols.add(rule);
       
       Node idList = nonTermDef.get(ID_LIST);
       while(idList.hasSymbols()) {
@@ -181,9 +186,10 @@ public class GRBuilder implements Serializable {
     }
   }
 
-  private void addSymbolId(Node idList, int groupId, List<Integer> productionSymbols) {
+  private void addSymbolId(Node idList, int groupId, List<Rule> productionSymbols) {
     String name;
     int id;
+    Rule rule;
     Node termListItem = idList.get(ID);
     Node starOpt = idList.get(STAR_OPT);
     name = ((Terminal) termListItem.symbol()).getName();
@@ -193,16 +199,19 @@ public class GRBuilder implements Serializable {
       if (id < 0) {
         throw new RuntimeException("Unknown symbol " + name);
       }
-      if (starOpt.hasSymbols()){
-        nonterminals.get(id).markAsTrimmable();
-      }
       id += 1000;
+      rule = new Rule(id);
+      if (starOpt.hasSymbols()){
+        rule.markAsTrimmable();
+      }
+    } else {
+      rule = new Rule(id);
     }
-    productionSymbols.add(id);
+    productionSymbols.add(rule);
   }
   
-  private void createNewProductionRule(int pruleId, List<Integer> productionSymbols) {
-    int[] productionSymbolIds = new int[productionSymbols.size()];
+  private void createNewProductionRule(int pruleId, List<Rule> productionSymbols) {
+    Rule[] productionSymbolIds = new Rule[productionSymbols.size()];
       for (int i = 0; i < productionSymbolIds.length; i++){
         productionSymbolIds[i] = productionSymbols.get(i);
       }
@@ -220,8 +229,10 @@ public class GRBuilder implements Serializable {
    * @throws FileNotFoundException
    * @throws ParseException
    * @throws SyntaxException 
+   * @throws growdy.exceptions.AmbiguousGrammarException 
    */
-  public static GRBuilder buildLanguage(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
+  public static GRBuilder buildLanguage(String grammarSourceFile) throws 
+          IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
     return new GRBuilder(grammarSourceFile);
   }
   

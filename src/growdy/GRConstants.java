@@ -68,48 +68,49 @@ public class GRConstants {
   
   public static final ProductionRule[] grammarRules = {
     new ProductionRule(PRule_GR, 
-            new int[]{ID, GRAMMAR}),
+            new Rule[]{new Rule(ID), new Rule(GRAMMAR)}),
     new ProductionRule(PRule_GRAMMAR, 
-            new int[]{TERMINAL_BODY, GRAMMAR_BODY}),
+            new Rule[]{new Rule(TERMINAL_BODY), new Rule(GRAMMAR_BODY)}),
     
     
     new ProductionRule(PRule_TERMINAL_BODY, 
-            new int[]{LEFTCARET, TERMINAL, RIGHTCARET, TERMINAL_DEFS, SPECIAL_DEF}),
+            new Rule[]{new Rule(LEFTCARET), new Rule(TERMINAL), 
+              new Rule(RIGHTCARET), new Rule(TERMINAL_DEFS), new Rule(SPECIAL_DEF)}),
     new ProductionRule(PRule_SPECIAL_DEF, 
-            new int[]{LEFTCARET, SPECIAL, RIGHTCARET, IS, CONST, SEMICOLON}),
+            new Rule[]{new Rule(LEFTCARET), new Rule(SPECIAL), new Rule(RIGHTCARET), new Rule(IS), new Rule(CONST), new Rule(SEMICOLON)}),
     new ProductionRule(PRule_TERMINAL_DEFS, 
-            new int[]{TERMINAL_DEF, SEMICOLON, TERMINAL_DEFS}),
+            new Rule[]{new Rule(TERMINAL_DEF), new Rule(SEMICOLON), new Rule(TERMINAL_DEFS)}),
     new ProductionRule(PRule_TERMINAL_DEF, 
-            new int[]{ID, IS, ATOMIC}),
+            new Rule[]{new Rule(ID), new Rule(IS), new Rule(ATOMIC)}),
     
     new ProductionRule(PRule_IDENT, 
-            new int[]{IDENT}),
+            new Rule[]{new Rule(IDENT)}),
     new ProductionRule(PRule_CONSTANT, 
-            new int[]{CONSTANT}),
+            new Rule[]{new Rule(CONSTANT)}),
     new ProductionRule(PRule_CONST, 
-            new int[]{CONST}),
+            new Rule[]{new Rule(CONST)}),
     
     
     new ProductionRule(PRule_GRAMMAR_BODY, 
-            new int[]{LEFTCARET, BEGIN, RIGHTCARET, NONTERMINAL_DEFS}),
+            new Rule[]{new Rule(LEFTCARET), new Rule(BEGIN), new Rule(RIGHTCARET), new Rule(NONTERMINAL_DEFS)}),
     new ProductionRule(PRule_NONTERMINAL_DEFS, 
-            new int[]{NONTERMINAL_DEF, SEMICOLON, NONTERMINAL_DEFS}),
+            new Rule[]{new Rule(NONTERMINAL_DEF), new Rule(SEMICOLON), new Rule(NONTERMINAL_DEFS)}),
     new ProductionRule(PRule_OR_OPT, 
-            new int[]{OR, ID, STAR_OPT, ID_LIST, OR_OPTION}),
+            new Rule[]{new Rule(OR), new Rule(ID), new Rule(STAR_OPT), new Rule(ID_LIST), new Rule(OR_OPTION)}),
     new ProductionRule(PRule_NONTERMINAL_DEF, 
-            new int[]{ID, NONTERMINAL_PARAMS, IS, ID, STAR_OPT, ID_LIST, OR_OPTION}),
+            new Rule[]{new Rule(ID), new Rule(NONTERMINAL_PARAMS), new Rule(IS), new Rule(ID), new Rule(STAR_OPT), new Rule(ID_LIST), new Rule(OR_OPTION)}),
     new ProductionRule(PRule_ID_LIST, 
-            new int[]{ID, STAR_OPT, ID_LIST}),
+            new Rule[]{new Rule(ID), new Rule(STAR_OPT), new Rule(ID_LIST)}),
     
     new ProductionRule(PRule_NONTERMINAL_PARAMS, 
-            new int[]{LEFTPAREN, TERMINAL_PARAMS, RIGHTPAREN}),
+            new Rule[]{new Rule(LEFTPAREN), new Rule(TERMINAL_PARAMS), new Rule(RIGHTPAREN)}),
     new ProductionRule(PRule_TERMINAL_PARAMS, 
-            new int[]{ID, TERMINAL_PARAMS}),
+            new Rule[]{new Rule(ID), new Rule(TERMINAL_PARAMS)}),
     
     new ProductionRule(PRule_STAR_OPT,
-            new int[]{STAR}),
+            new Rule[]{new Rule(STAR)}),
     
     new ProductionRule(PRule_END, 
-            new int[]{})
+            new Rule[]{})
   };
 }

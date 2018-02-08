@@ -1,6 +1,7 @@
 
 package growdy;
 
+import growdy.exceptions.AmbiguousGrammarException;
 import growdy.exceptions.ParseException;
 import growdy.exceptions.SyntaxException;
 import java.io.File;
@@ -72,7 +73,7 @@ public class MainGR {
       try (FileWriter javaSourceOut = new FileWriter(javaSourceFile)) {
         javaSourceOut.write(gr.getJavaSourceCode(sourcePackage));
       }
-    } catch (IOException | ParseException | SyntaxException ex) {
+    } catch (IOException | ParseException | SyntaxException | AmbiguousGrammarException ex) {
       Logger.getLogger(GRBuilder.class.getName()).log(Level.SEVERE, null, ex);
     }
   }

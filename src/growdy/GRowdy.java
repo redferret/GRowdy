@@ -1,6 +1,7 @@
 
 package growdy;
 
+import growdy.exceptions.AmbiguousGrammarException;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import growdy.exceptions.ParseException;
@@ -66,7 +67,7 @@ public class GRowdy {
    * @throws ParseException
    * @throws SyntaxException 
    */
-  public void buildFromSource(String sourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException {
+  public void buildFromSource(String sourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
     parser.parseSource(sourceFile);
     builder.buildAs(parser, grObject.getRootTerminalId());
   }
@@ -79,7 +80,7 @@ public class GRowdy {
    * @throws ParseException
    * @throws SyntaxException 
    */
-  public void buildFromString(String sourceCode, int programNode) throws ParseException, SyntaxException {
+  public void buildFromString(String sourceCode, int programNode) throws ParseException, SyntaxException, AmbiguousGrammarException {
     parser.parseLine(sourceCode);
     builder.buildAs(parser, programNode);
   }

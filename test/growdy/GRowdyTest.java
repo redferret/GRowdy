@@ -11,7 +11,7 @@ import static growdy.GRConstants.*;
  */
 public class GRowdyTest {
   
-  private static final Node root = getTestProgram("example");
+  private static final Node root = getTestProgram("test/example");
   
   public GRowdyTest() {
   }
