@@ -148,7 +148,6 @@ public class GRBuilder implements Serializable {
         }
         if (starOpt.hasSymbols()){
           nonterminals.get(id).markAsTrimmable();
-          nonterminals.get(id).setGroupId(groupId);
         }
         id += 1000;
       }
@@ -196,7 +195,6 @@ public class GRBuilder implements Serializable {
       }
       if (starOpt.hasSymbols()){
         nonterminals.get(id).markAsTrimmable();
-        nonterminals.get(id).setGroupId(groupId);
       }
       id += 1000;
     }
