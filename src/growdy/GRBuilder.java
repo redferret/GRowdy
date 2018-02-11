@@ -35,7 +35,9 @@ public class GRBuilder implements Serializable {
   private transient final Language grLang = Language.build(GRConstants.grammarRules, 
           GRConstants.terms, GRConstants.nonterminals);
   private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym, 0, 1);
-  private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang);
+  private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang, (Symbol symbol, int line) -> {
+      return new Node(symbol, line);
+    });
   
   private GRBuilder(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
     lexer.parseSource(grammarSourceFile);
