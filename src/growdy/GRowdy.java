@@ -21,7 +21,7 @@ public class GRowdy {
   private final RowdyBuilder builder;
   private final GRBuilder grObject;
   
-  private GRowdy(GRBuilder grObject) {
+  private GRowdy(GRBuilder grObject, NodeFactory factory) {
     // Get the grammar as a resource (Deserialize) and use it to fill in
     // everything needed for a Language and a Lexer
     this.grObject = grObject;
@@ -34,7 +34,7 @@ public class GRowdy {
     
     language = Language.build(grammarRules, terms, nonterminals);
     parser = new RowdyLexer(terms, specialSym, identId, constId);
-    builder = RowdyBuilder.getBuilder(language);
+    builder = RowdyBuilder.getBuilder(language, factory);
   }
   
   /**
@@ -45,7 +45,13 @@ public class GRowdy {
    * @return An instance of your language builder
    */
   public static GRowdy getInstance(GRBuilder grObject) {
-    return new GRowdy(grObject);
+    return getInstance(grObject, (Symbol symbol, int line) -> {
+      return new Node(symbol, line);
+    });
+  }
+  
+  public static GRowdy getInstance(GRBuilder grObject, NodeFactory factory) {
+    return new GRowdy(grObject, factory);
   }
   
   /**

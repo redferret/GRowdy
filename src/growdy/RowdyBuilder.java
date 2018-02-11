@@ -20,16 +20,18 @@ public class RowdyBuilder {
   private Token currentToken;
   private final Language language;
   private Node root;
+  private final NodeFactory factory;
   private Deque<Token> lookAheadQueue;
   
-  private RowdyBuilder(Language language) {
+  private RowdyBuilder(Language language, NodeFactory factory) {
     line = 1;
     this.language = language;
     lookAheadQueue = new ArrayDeque<>();
+    this.factory = factory;
   }
   
-  public static RowdyBuilder getBuilder(Language language){
-    return new RowdyBuilder(language);
+  public static RowdyBuilder getBuilder(Language language, NodeFactory factory) {
+    return new RowdyBuilder(language, factory);
   }
   
   public Node getProgram() {
@@ -98,7 +100,7 @@ public class RowdyBuilder {
         }
         children.remove(i);
         Terminal terminal = new Terminal(symbol.getSymbolAsString(), currentToken.getID(), currentToken.getSymbol());
-        children.add(i, new Node(terminal, line));
+        children.add(i, factory.getNode(terminal, line));
         currentToken = parser.getToken();
         while (currentToken != null && currentToken.getID() == 200) {
           line++;
@@ -161,7 +163,7 @@ public class RowdyBuilder {
     for (int i = 0; i < symbols.length; i++){
       Symbol symbol = symbols[i];
       Rule rule = rules[i];
-      Node node = new Node(symbol, line);
+      Node node = factory.getNode(symbol, line);
       node.setTrimmable(rule.isTrimmable());
       parent.add(node);
     }

@@ -25,3 +25,5 @@ build/
 nbproject/private/
 
 dist/
+!/travis-ci/junit-4.12.jar
+!/travis-ci/hamcrest-core-1.3.jar

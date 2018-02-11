@@ -11,6 +11,7 @@ import growdy.exceptions.SyntaxException;
 import java.io.IOException;
 import static org.junit.Assert.*;
 import static growdy.GRConstants.*;
+import growdy.Symbol;
 import growdy.exceptions.AmbiguousGrammarException;
 
 /**
@@ -24,7 +25,9 @@ public class TestUtils {
   public static final Language growdy = 
           Language.build(grammarRules, terms, nonterminals);
   public static final RowdyBuilder builder = 
-          RowdyBuilder.getBuilder(growdy);
+          RowdyBuilder.getBuilder(growdy, (Symbol symbol, int line) -> {
+            return new Node(symbol, line);
+          });
   
   public static Node getTestProgram(String testProgram) {
     try {
