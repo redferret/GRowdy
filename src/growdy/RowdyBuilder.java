@@ -41,7 +41,7 @@ public class RowdyBuilder {
   public void buildAs(RowdyLexer parser, int programType) throws SyntaxException, AmbiguousGrammarException {
     this.parser = parser;
     NonTerminal program = (NonTerminal) language.getSymbol(programType);
-    root = new Node(program, 1);
+    root = factory.getNode(program, 1);
     currentToken = this.parser.getToken();
     if (currentToken == null){
       return;
