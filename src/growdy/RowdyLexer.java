@@ -42,8 +42,8 @@ public class RowdyLexer {
     id = Pattern.compile("([a-z]|[A-Z])+(\\_|\\d|[a-z]|[A-Z])*");
     whiteSpace = Pattern.compile("\\s");
     tokenString = Pattern.compile("\"(.)*\"");
-    number = Pattern.compile("-?\\d*\\.?\\d*(F|f|D|d)?");
-    tokenNumber = Pattern.compile("-?\\d+(\\.?\\d+)?(F|f|D|d)?");
+    number = Pattern.compile("-?\\d*\\.?\\d*(L|l|D|d|F|f)?");
+    tokenNumber = Pattern.compile("-?\\d+(\\.?\\d+)?(L|l|D|d|F|f)?");
   }
 
   /**
