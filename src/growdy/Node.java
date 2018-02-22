@@ -4,18 +4,19 @@ import java.util.ArrayList;
 
 /**
  * Tree Node for a parse tree
+ * @param <T>
  */
-public class Node {
+public class Node<T extends Node> {
 
-  private final ArrayList<Node> children;
-  private final Symbol def;
-  private Boolean seqActive;
-  private final int line;
-  private boolean trimmable;
+  protected ArrayList<T> children;
+  protected final Symbol symbol;
+  protected Boolean seqActive;
+  protected final int line;
+  protected boolean trimmable;
 
-  public Node(Symbol def, int lineNumber) {
+  public Node(Symbol symbol, int lineNumber) {
     children = new ArrayList<>();
-    this.def = def;
+    this.symbol = symbol;
     seqActive = false;
     this.line = lineNumber;
     trimmable = false;
@@ -41,12 +42,12 @@ public class Node {
     return line;
   }
 
-  public void add(Node child) {
+  public void add(T child) {
     children.add(child);
   }
 
   public Symbol symbol() {
-    return def;
+    return symbol;
   }
 
   public boolean hasSymbols() {
@@ -67,11 +68,11 @@ public class Node {
    * @param id The child's ID to search for
    * @return The found child, null if nothing was found
    */
-  public Node get(int id) {
+  public T get(int id) {
     return get(id, 0);
   }
 
-  public Node get(int id, int occur, boolean throwException){
+  public T get(int id, int occur, boolean throwException){
     if (throwException) {
       return get(id, occur);
     } else {
@@ -83,7 +84,7 @@ public class Node {
     }
   }
   
-  public Node get(int id, boolean throwException) {
+  public T get(int id, boolean throwException) {
     return get(id, 0, throwException);
   }
 
@@ -97,7 +98,7 @@ public class Node {
    * @param occur The number of times to skip a duplicate
    * @return The child node of this parent, null if it doesn't exist.
    */
-  public Node get(int id, int occur) throws RuntimeException {
+  public T get(int id, int occur) throws RuntimeException {
     for (int c = 0; c < children.size(); c++) {
       if (children.get(c).symbol().id() == id
               && occur == 0) {
@@ -108,16 +109,42 @@ public class Node {
       }
     }
     throw new RuntimeException("The id '" + id
-            + "' could not be found for the node '" + def + "' on line "
+            + "' could not be found for the node '" + symbol + "' on line "
             + line);
   }
 
-  public ArrayList<Node> getAll() {
+  public ArrayList<T> getAll() {
     return children;
+  }
+  
+  public ArrayList<T> copyChildren() {
+    ArrayList<T> copies = new ArrayList<>();
+    
+    children.stream().map((orig) -> orig.copy()).forEachOrdered((copy) -> {
+      copies.add((T) copy);
+    });
+    
+    return copies;
+  }
+  
+  public T copy() {
+    Symbol cSymbol = null;
+    if (this.symbol instanceof Terminal) {
+      cSymbol = ((Terminal)symbol).copy();
+    } else if (this.symbol instanceof NonTerminal) {
+      cSymbol = ((NonTerminal)symbol).copy();
+    }
+    
+    Node copy = new Node(cSymbol, this.line);
+    copy.seqActive = this.seqActive;
+    copy.trimmable = this.trimmable;
+    copy.children = copyChildren();
+    
+    return (T) copy;
   }
 
   @Override
   public String toString() {
-    return def.toString() + (children.isEmpty() ? "" : children.toString());
+    return symbol.toString() + (children.isEmpty() ? "" : children.toString());
   }
 }

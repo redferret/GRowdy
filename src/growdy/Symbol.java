@@ -42,7 +42,9 @@ public abstract class Symbol implements Serializable {
   public void setSymbol(String symbol) {
     this.symbol = symbol;
   }
-
+  
+  public abstract Symbol copy();
+  
   @Override
   public String toString() {
     return symbol;
