@@ -5,8 +5,9 @@ import java.util.ArrayList;
 /**
  * Tree Node for a parse tree
  * @param <T>
+ * @param <D>
  */
-public class Node<T extends Node> {
+public abstract class Node<T extends Node, D extends Object> {
 
   protected ArrayList<T> children;
   protected final Symbol symbol;
@@ -54,11 +55,16 @@ public class Node<T extends Node> {
     return !children.isEmpty();
   }
 
-  public Node getLeftMost() {
+  public T getLeftMost() {
     if (children.isEmpty()) {
       return null;
     }
-    return children.get(0);
+    for (int c = 0; c < children.size(); c++) {
+      if (children.get(c).symbol() instanceof NonTerminal) {
+        return children.get(c);
+      }
+    }
+    return null;
   }
 
   /**
@@ -113,35 +119,40 @@ public class Node<T extends Node> {
             + line);
   }
 
+  public void setChildren(ArrayList<T> children) {
+    this.children = children;
+  }
+  
   public ArrayList<T> getAll() {
     return children;
   }
   
+  /**
+   * Performs a hard copy of all the children nodes of this parent and a
+   * hard copy of all it's children's children and so on.
+   * @return A hard copy of the subtrees for this root
+   */
   public ArrayList<T> copyChildren() {
     ArrayList<T> copies = new ArrayList<>();
-    
     children.stream().map((orig) -> orig.copy()).forEachOrdered((copy) -> {
       copies.add((T) copy);
     });
-    
     return copies;
   }
   
-  public T copy() {
+  public Symbol copySymbol() {
     Symbol cSymbol = null;
     if (this.symbol instanceof Terminal) {
       cSymbol = ((Terminal)symbol).copy();
     } else if (this.symbol instanceof NonTerminal) {
       cSymbol = ((NonTerminal)symbol).copy();
     }
-    
-    Node copy = new Node(cSymbol, this.line);
-    copy.seqActive = this.seqActive;
-    copy.trimmable = this.trimmable;
-    copy.children = copyChildren();
-    
-    return (T) copy;
+    return cSymbol;
   }
+  
+  public abstract D execute(D leftValue);
+  
+  public abstract T copy();
 
   @Override
   public String toString() {
