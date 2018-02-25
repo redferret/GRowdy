@@ -45,6 +45,11 @@ public class Terminal extends Symbol {
   }
 
   @Override
+  public Terminal copy() {
+    return new Terminal(this.symbol, this.id, this.realValue);
+  }
+  
+  @Override
   public String toString() {
     return realValue;
   }

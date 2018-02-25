@@ -26,7 +26,17 @@ public class TestUtils {
           Language.build(grammarRules, terms, nonterminals);
   public static final RowdyBuilder builder = 
           RowdyBuilder.getBuilder(growdy, (Symbol symbol, int line) -> {
-            return new Node(symbol, line);
+            return new Node(symbol, line) {
+              @Override
+              public Object execute(Object leftValue) {
+                return null;
+              }
+
+              @Override
+              public Node copy() {
+                throw new UnsupportedOperationException("Can't Execute GR Nodes");
+              }
+            };
           });
   
   public static Node getTestProgram(String testProgram) {

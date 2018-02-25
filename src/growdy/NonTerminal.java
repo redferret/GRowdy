@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class NonTerminal extends Symbol implements Serializable{
 
-  private final List<Hint> hints;
+  private List<Hint> hints;
 
   public NonTerminal(String symbol, int id, int[][] hints) {
     super(symbol, id);
@@ -21,6 +21,18 @@ public class NonTerminal extends Symbol implements Serializable{
       Hint h = new Hint(hint[TERMINAL], hint[PRODUCTION_RULE]);
       this.hints.add(h);
     }
+  }
+  
+  @Override
+  public NonTerminal copy() {
+    List<Hint> copies = new ArrayList<>();
+    hints.stream().map((orig) -> orig.copy()).forEachOrdered((copy) -> {
+      copies.add(copy);
+    });
+    
+    NonTerminal copy = new NonTerminal(this.symbol, this.id, new int[][]{});
+    copy.hints = copies;
+    return copy;
   }
   
   public Hint getHint(int id) {

@@ -20,6 +20,7 @@ public class GRowdy {
   private final RowdyLexer parser;
   private final RowdyBuilder builder;
   private final GRBuilder grObject;
+  private final NodeFactory factory;
   
   private GRowdy(GRBuilder grObject, NodeFactory factory) {
     // Get the grammar as a resource (Deserialize) and use it to fill in
@@ -35,19 +36,7 @@ public class GRowdy {
     language = Language.build(grammarRules, terms, nonterminals);
     parser = new RowdyLexer(terms, specialSym, identId, constId);
     builder = RowdyBuilder.getBuilder(language, factory);
-  }
-  
-  /**
-   * Get an instance of your language by passing in the name of the grammar
-   * resource file. This file should be packaged inside your interpreters 
-   * JAR file.
-   * @param grObject
-   * @return An instance of your language builder
-   */
-  public static GRowdy getInstance(GRBuilder grObject) {
-    return getInstance(grObject, (Symbol symbol, int line) -> {
-      return new Node(symbol, line);
-    });
+    this.factory = factory;
   }
   
   public static GRowdy getInstance(GRBuilder grObject, NodeFactory factory) {

@@ -19,6 +19,10 @@ public class Hint  implements Serializable{
     this.hint = productionRule;
   }
 
+  public Hint copy() {
+    return new Hint(this.terminalId, this.hint);
+  }
+  
   public int getProductionHint() {
     return hint;
   }

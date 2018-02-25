@@ -36,7 +36,17 @@ public class GRBuilder implements Serializable {
           GRConstants.terms, GRConstants.nonterminals);
   private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym, 0, 1);
   private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang, (Symbol symbol, int line) -> {
-      return new Node(symbol, line);
+      return new Node(symbol, line) {
+        @Override
+        public Node copy() {
+          return null;
+        }
+
+        @Override
+        public Object execute(Object leftValue) {
+          throw new UnsupportedOperationException("Can't execute GR Nodes"); 
+        }
+      };
     });
   
   private GRBuilder(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
