@@ -100,7 +100,7 @@ public class GRBuilder implements Serializable {
       Node termDef = termDefs.get(TERMINAL_DEF);
       Node termId = termDef.get(ID);
       String idName = ((Terminal)termId.symbol()).getName();
-      Terminal atomic = (Terminal)termDef.get(ATOMIC).getLeftMost().symbol();
+      Terminal atomic = (Terminal)termDef.get(ATOMIC).getLeftMost(true).symbol();
       switch (atomic.id()) {
         case IDENT:
           termSymbols.add(identId, atomic.getName());
