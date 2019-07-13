@@ -36,7 +36,7 @@ public class Terminal extends Symbol {
     realValue = value;
   }
 
-  public String getName() {
+  public String getValue() {
     return realValue;
   }
 

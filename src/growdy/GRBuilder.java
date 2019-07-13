@@ -86,9 +86,9 @@ public class GRBuilder implements Serializable {
     Node termBody = builder.getProgram().get(GRAMMAR).get(TERMINAL_BODY);
     Node nonTermBody = builder.getProgram().get(GRAMMAR).get(GRAMMAR_BODY);
     Node specialSyms = termBody.get(SPECIAL_DEF);
-    specialSym = ((Terminal)specialSyms.get(CONST).symbol()).getName();
+    specialSym = ((Terminal)specialSyms.get(CONST).symbol()).getValue();
     Node grammarId = builder.getProgram().get(ID);
-    grammarName = ((Terminal)grammarId.symbol()).getName();
+    grammarName = ((Terminal)grammarId.symbol()).getValue();
     
     collectTerminalDefs(termBody.get(TERMINAL_DEFS));
     collectNonTerminals(nonTermBody.get(NONTERMINAL_DEFS));
@@ -99,19 +99,19 @@ public class GRBuilder implements Serializable {
     while (termDefs.hasSymbols()) {
       Node termDef = termDefs.get(TERMINAL_DEF);
       Node termId = termDef.get(ID);
-      String idName = ((Terminal)termId.symbol()).getName();
+      String idName = ((Terminal)termId.symbol()).getValue();
       Terminal atomic = (Terminal)termDef.get(ATOMIC).getLeftMost(true).symbol();
       switch (atomic.id()) {
         case IDENT:
-          termSymbols.add(identId, atomic.getName());
+          termSymbols.add(identId, atomic.getValue());
           termNames.add(identId, idName);
           break;
         case CONSTANT:
-          termSymbols.add(constId, atomic.getName());
+          termSymbols.add(constId, atomic.getValue());
           termNames.add(constId, idName);
           break;
         case CONST:
-          termSymbols.add(atomic.getName().replaceAll("\"", ""));
+          termSymbols.add(atomic.getValue().replaceAll("\"", ""));
           termNames.add(idName.replaceAll("\"", ""));
           break;
       }
@@ -124,7 +124,7 @@ public class GRBuilder implements Serializable {
     while (nonTermDefs.hasSymbols()) {
       Node nonTermDef = nonTermDefs.get(NONTERMINAL_DEF);
       Node nonTermId = nonTermDef.get(ID);
-      String nonTerminalName = ((Terminal)nonTermId.symbol()).getName();
+      String nonTerminalName = ((Terminal)nonTermId.symbol()).getValue();
       nontermNames.add(nonTerminalName);
       String nonTerminalRep = nonTerminalName.toLowerCase().replaceAll("_", "-");
       List<int[]> hints = new ArrayList<>();
@@ -132,7 +132,7 @@ public class GRBuilder implements Serializable {
       Node params = nonTermDef.get(NONTERMINAL_PARAMS);
       Node terminals = params.get(TERMINAL_PARAMS);
       while(terminals.hasSymbols()){
-        String termName = ((Terminal)terminals.get(ID).symbol()).getName();
+        String termName = ((Terminal)terminals.get(ID).symbol()).getValue();
         int termid = termNames.indexOf(termName);
         hints.add(new int[]{termid, nonTermIdStart});
         terminals = terminals.get(TERMINAL_PARAMS);
@@ -152,7 +152,7 @@ public class GRBuilder implements Serializable {
       Node nonTermDef = nonTermDefs.get(NONTERMINAL_DEF);
       Node terminal = nonTermDef.get(ID, 1);
       Node starOpt = nonTermDef.get(STAR_OPT);
-      String name = ((Terminal)terminal.symbol()).getName();
+      String name = ((Terminal)terminal.symbol()).getValue();
       int id = termNames.indexOf(name);
       Rule rule;
       if (id < 0) {
@@ -204,7 +204,7 @@ public class GRBuilder implements Serializable {
     Rule rule;
     Node termListItem = idList.get(ID);
     Node starOpt = idList.get(STAR_OPT);
-    name = ((Terminal) termListItem.symbol()).getName();
+    name = ((Terminal) termListItem.symbol()).getValue();
     id = termNames.indexOf(name);
     if (id < 0) {
       id = nontermNames.indexOf(name);
