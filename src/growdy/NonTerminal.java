@@ -13,6 +13,10 @@ public class NonTerminal extends Symbol implements Serializable{
 
   private List<Hint> hints;
 
+  public NonTerminal(String symbol, int id) {
+    this(symbol, id, new int[][]{});
+  }
+  
   public NonTerminal(String symbol, int id, int[][] hints) {
     super(symbol, id);
     this.hints = new ArrayList<>();

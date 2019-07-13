@@ -55,16 +55,24 @@ public abstract class Node<T extends Node, D extends Object> {
     return !children.isEmpty();
   }
 
-  public T getLeftMost() {
+  public T getLeftMost(boolean includeTerminals) {
     if (children.isEmpty()) {
       return null;
     }
     for (int c = 0; c < children.size(); c++) {
-      if (children.get(c).symbol() instanceof NonTerminal) {
-        return children.get(c);
+      if (children.get(c) != null) {
+        if (!includeTerminals && children.get(c).symbol() instanceof NonTerminal) {
+          return children.get(c);
+        } else if (includeTerminals && children.get(c).symbol() instanceof Terminal){
+          return children.get(c);
+        }
       }
     }
     return null;
+  }
+  
+  public T getLeftMost() {
+    return getLeftMost(false);
   }
 
   /**

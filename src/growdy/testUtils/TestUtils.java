@@ -79,7 +79,7 @@ public class TestUtils {
   
   public static void testForTerminal(Node terminal, String expected) {
     assertNotNull("Terminal Node is null", terminal);
-    String actual = ((Terminal)terminal.symbol()).getName();
+    String actual = ((Terminal)terminal.symbol()).getValue();
     assertEquals("Terminal's name doesn't match",expected, actual);
   }
   
