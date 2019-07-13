@@ -1,5 +1,5 @@
 language: java
-install: ant deps
+install: ant
 notifications:
   email:
     on_success: never
