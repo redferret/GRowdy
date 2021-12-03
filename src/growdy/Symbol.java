@@ -47,6 +47,6 @@ public abstract class Symbol implements Serializable {
   
   @Override
   public String toString() {
-    return symbol;
+    return symbol + " : " + id;
   }
 }

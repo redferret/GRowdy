@@ -2,13 +2,7 @@
 package growdy;
 
 import growdy.exceptions.ParseException;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
@@ -28,7 +22,7 @@ public class RowdyLexerTest {
   
   @Before
   public void setUp() throws IOException {
-    lexer = new RowdyLexer(reserved, operators, 3, 4);
+    lexer = new RowdyLexer(reserved, operators);
     try {
       lexer.parseLine("add a + 25 - 1");
     } catch (ParseException ex) {
@@ -62,7 +56,7 @@ public class RowdyLexerTest {
   @Test
   public void testGetToken() {
     Token token;
-    Integer[] expectedIds = {0, 3, 1, 4, 2, 4, 200};
+    Integer[] expectedIds = {0, 0, 1, 1, 2, 1, 200};
     for (Integer expectedId : expectedIds){
       token = lexer.getToken();
       Integer tokenId = token.getID();

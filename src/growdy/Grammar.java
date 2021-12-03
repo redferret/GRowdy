@@ -9,16 +9,17 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import static growdy.GRConstants.*;
 import growdy.exceptions.AmbiguousGrammarException;
+import static growdy.GRConstants.*;
+
 
 /**
- * This class builds the grammar for your language and will be used as a 
+ * This class builds and defines the grammar for your language and will be used as a 
  * resource file for compiling or running your source files written in your
  * programming language.
  * @author Richard DeSilvey
  */
-public class GRBuilder implements Serializable {
+public class Grammar implements Serializable {
 
   private final List<ProductionRule> productionRules;
   private final List<NonTerminal> nonterminals;
@@ -28,13 +29,11 @@ public class GRBuilder implements Serializable {
   private String specialSym;
   private String grammarName;
   private final int rootNodeId = 1000;
-  private final int identId = 0;
-  private final int constId = 1;
   
   private transient String javaSource;
   private transient final Language grLang = Language.build(GRConstants.grammarRules, 
           GRConstants.terms, GRConstants.nonterminals);
-  private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym, 0, 1);
+  private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym);
   private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang, (Symbol symbol, int line) -> {
       return new Node(symbol, line) {
         @Override
@@ -49,7 +48,7 @@ public class GRBuilder implements Serializable {
       };
     });
   
-  private GRBuilder(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
+  private Grammar(String grammarSourceFile) throws IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
     lexer.parseSource(grammarSourceFile);
     builder.buildAs(lexer, GR);
     
@@ -103,12 +102,12 @@ public class GRBuilder implements Serializable {
       Terminal atomic = (Terminal)termDef.get(ATOMIC).getLeftMost(true).symbol();
       switch (atomic.id()) {
         case IDENT:
-          termSymbols.add(identId, atomic.getValue());
-          termNames.add(identId, idName);
+          termSymbols.add(RowdyLexer.IDENTIFIER, atomic.getValue());
+          termNames.add(RowdyLexer.IDENTIFIER, idName);
           break;
         case CONSTANT:
-          termSymbols.add(constId, atomic.getValue());
-          termNames.add(constId, idName);
+          termSymbols.add(RowdyLexer.CONSTANT, atomic.getValue());
+          termNames.add(RowdyLexer.CONSTANT, idName);
           break;
         case CONST:
           termSymbols.add(atomic.getValue().replaceAll("\"", ""));
@@ -243,9 +242,9 @@ public class GRBuilder implements Serializable {
    * @throws SyntaxException 
    * @throws growdy.exceptions.AmbiguousGrammarException 
    */
-  public static GRBuilder buildLanguage(String grammarSourceFile) throws 
+  public static Grammar buildLanguage(String grammarSourceFile) throws 
           IOException, FileNotFoundException, ParseException, SyntaxException, AmbiguousGrammarException {
-    return new GRBuilder(grammarSourceFile);
+    return new Grammar(grammarSourceFile);
   }
   
   public String getJavaSourceCode(String sourcePackage) {
@@ -280,14 +279,6 @@ public class GRBuilder implements Serializable {
 
   public String getSpecialSym() {
     return specialSym;
-  }
-  
-  public int getIdentId() {
-    return identId;
-  }
-  
-  public int getConstId() {
-    return constId;
   }
 
 }
