@@ -26,6 +26,6 @@ public class Token {
 
   @Override
   public String toString() {
-    return symbol + " " + token;
+    return "" + symbol + " " + token;
   }
 }

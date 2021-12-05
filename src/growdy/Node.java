@@ -54,6 +54,10 @@ public abstract class Node<T extends Node, D extends Object> {
   public boolean hasSymbols() {
     return !children.isEmpty();
   }
+  
+  public boolean isEmpty() {
+    return children.isEmpty();
+  }
 
   public T getLeftMost(boolean includeTerminals) {
     if (children.isEmpty()) {
@@ -79,23 +83,15 @@ public abstract class Node<T extends Node, D extends Object> {
    * Gets the child node with the id, only returns the first occurance of the
    * found child.
    *
-   * @param id The child's ID to search for
+   * @param id The child's ID to search for, null if nothing found
    * @return The found child, null if nothing was found
    */
   public T get(int id) {
-    return get(id, 0);
+    return get(id, 0, false);
   }
-
-  public T get(int id, int occur, boolean throwException){
-    if (throwException) {
-      return get(id, occur);
-    } else {
-      try {
-        return get(id, occur);
-      } catch (RuntimeException re) {
-        return null;
-      }
-    }
+  
+  public T get(int id, int occur) {
+    return get(id, occur, false);
   }
   
   public T get(int id, boolean throwException) {
@@ -110,9 +106,10 @@ public abstract class Node<T extends Node, D extends Object> {
    *
    * @param id The id to search for
    * @param occur The number of times to skip a duplicate
+   * @param throwException
    * @return The child node of this parent, null if it doesn't exist.
    */
-  public T get(int id, int occur) throws RuntimeException {
+  public T get(int id, int occur, boolean throwException) throws RuntimeException {
     for (int c = 0; c < children.size(); c++) {
       if (children.get(c).symbol().id() == id
               && occur == 0) {
@@ -122,9 +119,13 @@ public abstract class Node<T extends Node, D extends Object> {
         occur--;
       }
     }
-    throw new RuntimeException("The id '" + id
-            + "' could not be found for the node '" + symbol + "' on line "
-            + line);
+    if (throwException) {
+      throw new RuntimeException("The id '" + id
+              + "' could not be found for the node '" + symbol + "' on line "
+              + line);
+    } else {
+      return null;
+    }
   }
 
   public void setChildren(ArrayList<T> children) {

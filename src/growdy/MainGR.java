@@ -13,15 +13,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Builds the grammar for your language. Produces two files in the folder
- * called 'lang'.
- * First file is a java source file containing all the ids for terminals
- * and nonterminals
- * Second file is a resource file of your grammar. GRowdy will load this
- * file to build your source files for your language.
- * The first argument is the path to your grammar, second argument is
- * the path you wish to have the resource files built to, this is optional
- * but recommended.
+ * Builds and defines the grammar for your language. Produces two files in the
+ * folder called 'lang'. First file is a java source file containing all the id
+ * constants for each terminal and nonterminal for your language. The second
+ * file is a resource file of your grammar. GRowdy will load this file to build
+ * your source files for your language. The first argument is the path to your
+ * grammar, second argument is the path you wish to have the resource files
+ * built to. The last argument is the name of the java package that exists for
+ * your project.
+ *
  * @author Richard DeSilvey
  */
 public class MainGR {
@@ -41,7 +41,7 @@ public class MainGR {
       sourcePackage = args[2];
     }
     try {
-      GRBuilder gr = GRBuilder.buildLanguage(fileName);
+      Grammar gr = Grammar.buildLanguage(fileName);
       String grammarName = gr.getGrammarName();
       System.out.println(grammarName + " has been built successfully!");
       
@@ -74,7 +74,7 @@ public class MainGR {
         javaSourceOut.write(gr.getJavaSourceCode(sourcePackage));
       }
     } catch (IOException | ParseException | SyntaxException | AmbiguousGrammarException ex) {
-      Logger.getLogger(GRBuilder.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(Grammar.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
 }

@@ -21,7 +21,7 @@ import growdy.exceptions.AmbiguousGrammarException;
 public class TestUtils {
   
   public static final RowdyLexer parser = 
-          new RowdyLexer(terms, specialSym, ID, CONST);
+          new RowdyLexer(terms, specialSym);
   public static final Language growdy = 
           Language.build(grammarRules, terms, nonterminals);
   public static final RowdyBuilder builder = 

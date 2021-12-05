@@ -13,9 +13,9 @@ import growdy.exceptions.ParseException;
 
 /**
  * RowdyLexer parses code files and allows a fetch for each individual token when
- * getID() is called. Once the token is called for it is removed from the file
+ * <code>getToken()</code> is called. Once the token is called for it, it is removed from the file
  * stack. The file stack contains groupings of characters which are later
- * interpreted when getID is called.
+ * interpreted when <code>getToken()</code> is called.
  *
  * @author Richard DeSilvey
  */
@@ -23,8 +23,7 @@ public class RowdyLexer {
 
   private final String SPECIALCHARGROUP;
 
-  private final int identifierID;
-  private final int constantID;
+  public static final int IDENTIFIER = 0, CONSTANT = 1, SPECIAL = -2, UNKNOWN = -1;
   /**
    * The table of all the reserved words/symbols for the language.
    */
@@ -45,16 +44,14 @@ public class RowdyLexer {
     number = Pattern.compile("-?\\d*\\.?\\d*(L|l|D|d|F|f)?");
     tokenNumber = Pattern.compile("-?\\d+(\\.?\\d+)?(L|l|D|d|F|f)?");
   }
-
+  
   /**
    * Creates a new RowdyLexer
    *
    * @param reserved The reserved words in the language
    * @param operators The string containing all the operators
-   * @param idID The id of an identifier
-   * @param constID The id of a constant
    */
-  public RowdyLexer(String[] reserved, String operators, int idID, int constID) {
+  public RowdyLexer(String[] reserved, String operators) {
 
     RESERVED_WORDS = new HashMap<>();
     SPECIALCHARGROUP = operators;
@@ -64,13 +61,11 @@ public class RowdyLexer {
         RESERVED_WORDS.put(reserved[i], i);
       }
     }
-    identifierID = idID;
-    constantID = constID;
   }
 
   /**
-   * Parses the code file given. New tokens will be generated each time parseSource is
- called on a given file.
+   * Parses a code file. New tokens will be generated each time parseSource 
+   * is called on a given file.
    *
    * @param fileName The code file being parsed.
    * @throws java.io.IOException
@@ -81,6 +76,11 @@ public class RowdyLexer {
     fileStack = parseFile(fileName);
   }
 
+  /**
+   * Parses a single line of code
+   * @param code
+   * @throws ParseException 
+   */
   public void parseLine(String code) throws ParseException {
     fileStack = parseCode(code);
   }
@@ -168,11 +168,10 @@ public class RowdyLexer {
       }
 
       if (!word.isEmpty()) {
-        symbols.add(
-                (eoln)
-                        ? word
-                        :// Else
-                        word.substring(0, word.length() - 1));
+        symbols.add((eoln)? 
+          word
+        :
+          word.substring(0, word.length() - 1));
       }
 
       if (!whiteSpace.matcher(Character.toString(cur)).matches()) {
@@ -228,13 +227,16 @@ public class RowdyLexer {
           return new Token(200, "EOLN");
         default:
           if (id.matcher(symbol).matches()) {
-            return new Token(identifierID, symbol);
+            return new Token(IDENTIFIER, symbol);
           } else if (tokenString.matcher(symbol).matches()) {
-            return new Token(constantID, symbol);
+            return new Token(CONSTANT, symbol);
           } else if (tokenNumber.matcher(symbol).matches()) {
-            return new Token(constantID, symbol);
+            return new Token(CONSTANT, symbol);
           } else {
-            return new Token(-1, "UNKNOWN '" + symbol + "'");
+            if (SPECIALCHARGROUP.contains(symbol)) {
+              return new Token(SPECIAL, "Special '" + symbol + "'");
+            }
+            return new Token(UNKNOWN, "Unknown '" + symbol + "'");
           }
       }
 
