@@ -13,7 +13,7 @@ import growdy.exceptions.SyntaxException;
  *
  * @author Richard DeSilvey
  */
-public class RowdyBuilder {
+public class TreeBuilder {
 
   private int line;
   private RowdyLexer parser;
@@ -23,15 +23,15 @@ public class RowdyBuilder {
   private final NodeFactory factory;
   private Deque<Token> lookAheadQueue;
 
-  private RowdyBuilder(Language language, NodeFactory factory) {
+  private TreeBuilder(Language language, NodeFactory factory) {
     line = 1;
     this.language = language;
     lookAheadQueue = new ArrayDeque<>();
     this.factory = factory;
   }
 
-  public static RowdyBuilder getBuilder(Language language, NodeFactory factory) {
-    return new RowdyBuilder(language, factory);
+  public static TreeBuilder getBuilder(Language language, NodeFactory factory) {
+    return new TreeBuilder(language, factory);
   }
 
   /**
@@ -82,11 +82,12 @@ public class RowdyBuilder {
   }
 
   /**
-   * Walks through the tree recursively building on non-terminals. If a syntax
-   * error is detected the line number is printed out.
+   * Walks through the tree recursively building on non-terminals.If a syntax
+ error is detected the line number is printed out.
    *
    * @param parent
    * @throws growdy.exceptions.SyntaxException
+   * @throws growdy.exceptions.AmbiguousGrammarException
    */
   public void build(Node parent) throws SyntaxException, AmbiguousGrammarException {
     Symbol symbol;

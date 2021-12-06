@@ -19,7 +19,7 @@ public class GRowdy {
 
   private final Language language;
   private final RowdyLexer parser;
-  private final RowdyBuilder builder;
+  private final TreeBuilder builder;
   private final Grammar grObject;
   
   private GRowdy(Grammar grObject, NodeFactory factory) {
@@ -33,7 +33,7 @@ public class GRowdy {
     
     language = Language.build(grammarRules, terms, nonterminals);
     parser = new RowdyLexer(terms, specialSym);
-    builder = RowdyBuilder.getBuilder(language, factory);
+    builder = TreeBuilder.getBuilder(language, factory);
   }
   
   public static GRowdy getInstance(Grammar grObject, NodeFactory factory) {

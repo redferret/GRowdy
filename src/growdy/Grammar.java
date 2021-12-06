@@ -34,7 +34,7 @@ public class Grammar implements Serializable {
   private transient final Language grLang = Language.build(GRConstants.grammarRules, 
           GRConstants.terms, GRConstants.nonterminals);
   private transient final RowdyLexer lexer = new RowdyLexer(GRConstants.terms, GRConstants.specialSym);
-  private transient final RowdyBuilder builder = RowdyBuilder.getBuilder(grLang, (Symbol symbol, int line) -> {
+  private transient final TreeBuilder builder = TreeBuilder.getBuilder(grLang, (Symbol symbol, int line) -> {
       return new Node(symbol, line) {
         @Override
         public Node copy() {

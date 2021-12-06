@@ -1,7 +1,7 @@
 
 package growdy.testUtils;
 
-import growdy.RowdyBuilder;
+import growdy.TreeBuilder;
 import growdy.RowdyLexer;
 import growdy.Terminal;
 import growdy.Language;
@@ -24,8 +24,8 @@ public class TestUtils {
           new RowdyLexer(terms, specialSym);
   public static final Language growdy = 
           Language.build(grammarRules, terms, nonterminals);
-  public static final RowdyBuilder builder = 
-          RowdyBuilder.getBuilder(growdy, (Symbol symbol, int line) -> {
+  public static final TreeBuilder builder = 
+          TreeBuilder.getBuilder(growdy, (Symbol symbol, int line) -> {
             return new Node(symbol, line) {
               @Override
               public Object execute(Object leftValue) {
